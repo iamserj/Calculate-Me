@@ -6,21 +6,48 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
+
 public class MainActivity extends Activity implements OnClickListener {
 	
-	double input1 = 0, input2 = 0;
-	boolean isEmpty = true;
-	//boolean Addition, Subtract, Multiplication, Division, mRemainder, decimal;
+	public static final String CLEAR = "C" ;
+	//public static final String CLEARMEMORY = "MC";
+	//public static final String ADDTOMEMORY = "M+";
+	//public static final String SUBTRACTFROMMEMORY = "M-";
+	//public static final String RECALLMEMORY = "MR";
+	//public static final String SQUAREROOT = "√";
+	//public static final String SQUARED = "x²";
+	//public static final String INVERT = "1/x";
+	//public static final String TOGGLESIGN = "+/-";
+	//public static final String SINE = "sin";
+	//public static final String COSINE = "cos";
+	//public static final String TANGENT = "tan";
+	
+	private static final char ADDITION = '+';
+	private static final char SUBTRACTION = '-';
+	private static final char MULTIPLICATION = '*';
+	private static final char DIVISION = '/';
+	private static final char EMPTY = '0';
+	private char CURRENT_ACTION;
+	//DecimalFormat decimalFormat = new DecimalFormat("#.##########");
+	
+	
+	private double valueOne = 0; //Double.MIN_VALUE;
+	private double valueTwo = 0; //Double.MIN_VALUE;
+	private boolean resultIsNegative = false;
+	
+	boolean resultIsEmpty = true;
+	boolean clearedOnce = false;
+	boolean dotPresence = false;
 	
 	TextView textDisplay, textHistory;
 	
 	Button button0, button1, button2, button3, button4, button5, button6, button7, button8, button9;
-	Button buttonBackspace, buttonBrakClose, buttonBrakOpen, buttonClear, buttonDot, buttonEqual;
+	Button buttonBackspace, buttonBrackets, buttonInvert, buttonClear, buttonDot, buttonEqual;
 	Button buttonAdd, buttonDivide, buttonMultiply, buttonSubtract;
 	
 	@Override
@@ -47,8 +74,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		button9 = findViewById(R.id.button9);
 		buttonAdd       = findViewById(R.id.buttonAdd);
 		buttonBackspace = findViewById(R.id.buttonBackspace);
-		buttonBrakClose = findViewById(R.id.buttonBracketClose);
-		buttonBrakOpen  = findViewById(R.id.buttonBracketOpen);
+		buttonBrackets = findViewById(R.id.buttonBrackets);
+		buttonInvert  = findViewById(R.id.buttonInvert);
 		buttonClear     = findViewById(R.id.buttonClear);
 		buttonDivide    = findViewById(R.id.buttonDivide);
 		buttonDot       = findViewById(R.id.buttonDot);
@@ -68,8 +95,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		button9.setOnClickListener(this);
 		buttonAdd.setOnClickListener(this);
 		buttonBackspace.setOnClickListener(this);
-		buttonBrakClose.setOnClickListener(this);
-		buttonBrakOpen.setOnClickListener(this);
+		buttonBrackets.setOnClickListener(this);
+		buttonInvert.setOnClickListener(this);
 		buttonClear.setOnClickListener(this);
 		buttonDivide.setOnClickListener(this);
 		buttonDot.setOnClickListener(this);
@@ -82,9 +109,9 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View view) {
 		
-		if (isEmpty) {
+		if (resultIsEmpty) {
 			switch (view.getId()) {
-				case R.id.button0:
+				//case R.id.button0:
 				case R.id.button1:
 				case R.id.button2:
 				case R.id.button3:
@@ -94,7 +121,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				case R.id.button7:
 				case R.id.button8:
 				case R.id.button9:
-					isEmpty = false;
+					resultIsEmpty = false;
 					textDisplay.setText("");
 					break;
 			}
@@ -102,77 +129,191 @@ public class MainActivity extends Activity implements OnClickListener {
 		switch (view.getId()) {
 			
 			case R.id.button0:
-				Toast.makeText(this, "0", Toast.LENGTH_SHORT).show();
+				if (resultIsEmpty) {
+					break;
+				}
 				textDisplay.setText(textDisplay.getText() + "0");
 				break;
 			case R.id.button1:
-				Toast.makeText(this, "1", Toast.LENGTH_SHORT).show();
 				textDisplay.setText(textDisplay.getText() + "1");
 				break;
 			case R.id.button2:
-				Toast.makeText(this, "2", Toast.LENGTH_SHORT).show();
 				textDisplay.setText(textDisplay.getText() + "2");
 				break;
 			case R.id.button3:
-				Toast.makeText(this, "3", Toast.LENGTH_SHORT).show();
 				textDisplay.setText(textDisplay.getText() + "3");
 				break;
 			case R.id.button4:
-				Toast.makeText(this, "4", Toast.LENGTH_SHORT).show();
 				textDisplay.setText(textDisplay.getText() + "4");
 				break;
 			case R.id.button5:
-				Toast.makeText(this, "5", Toast.LENGTH_SHORT).show();
 				textDisplay.setText(textDisplay.getText() + "5");
 				break;
 			case R.id.button6:
-				Toast.makeText(this, "6", Toast.LENGTH_SHORT).show();
 				textDisplay.setText(textDisplay.getText() + "6");
 				break;
 			case R.id.button7:
-				Toast.makeText(this, "7", Toast.LENGTH_SHORT).show();
 				textDisplay.setText(textDisplay.getText() + "7");
 				break;
 			case R.id.button8:
-				Toast.makeText(this, "8", Toast.LENGTH_SHORT).show();
 				textDisplay.setText(textDisplay.getText() + "8");
 				break;
 			case R.id.button9:
-				Toast.makeText(this, "9", Toast.LENGTH_SHORT).show();
 				textDisplay.setText(textDisplay.getText() + "9");
 				break;
-			
-			
-			case R.id.buttonAdd:
-				Toast.makeText(this, "+", Toast.LENGTH_SHORT).show();
-				break;
+				
+				
+			// UTILS BUTTONS
 			case R.id.buttonBackspace:
-				Toast.makeText(this, "B-S", Toast.LENGTH_SHORT).show();
+				if (!resultIsEmpty) {
+					String resData = textDisplay.getText().toString();
+					if (resData.length() == 1) {
+						resultIsEmpty = true;
+						resData = getResources().getString(R.string.zero);      // set 0
+					} else if (resData.length() > 1) {
+						//String negativeSymbol = getResources().getString(R.string.sub); // subtraction sign
+						if (resData.length() == 2 && resultIsNegative) {
+							resultIsNegative = false;
+							resultIsEmpty = true;
+							resData = getResources().getString(R.string.zero);  // set 0
+						} else {
+							resData = resData.substring(0, resData.length() - 1);   // just remove last digit
+						}
+					}
+					textDisplay.setText(resData);
+				}
 				break;
-			case R.id.buttonBracketClose:
-				Toast.makeText(this, ")", Toast.LENGTH_SHORT).show();
+			case R.id.buttonBrackets:
 				break;
-			case R.id.buttonBracketOpen:
-				Toast.makeText(this, "(", Toast.LENGTH_SHORT).show();
+			case R.id.buttonInvert:
+				String resData = textDisplay.getText().toString();
+				if (resultIsNegative) {
+					textDisplay.setText(resData.substring(1));
+				} else {
+					textDisplay.setText("-" + resData);
+				}
+				resultIsNegative = !resultIsNegative;
 				break;
 			case R.id.buttonClear:
-				Toast.makeText(this, "CLR", Toast.LENGTH_SHORT).show();
-				break;
-			case R.id.buttonDivide:
-				Toast.makeText(this, "/", Toast.LENGTH_SHORT).show();
+				if (!clearedOnce) {
+					clearedOnce = true;
+					resultIsEmpty = true;
+					dotPresence = false;
+					resultIsNegative = false;
+					textDisplay.setText(getResources().getString(R.string.zero));
+				} else {
+					clearedOnce = false;
+					resultIsEmpty = true;
+					dotPresence = false;
+					resultIsNegative = false;
+					textDisplay.setText(getResources().getString(R.string.zero));
+					textHistory.setText("");
+				}
 				break;
 			case R.id.buttonDot:
-				Toast.makeText(this, ".", Toast.LENGTH_SHORT).show();
+				if (!dotPresence) {
+					dotPresence = true;
+					textDisplay.setText(textDisplay.getText() + ".");
+					resultIsEmpty = false;
+				}
 				break;
-			case R.id.buttonEqual:
-				Toast.makeText(this, "=", Toast.LENGTH_SHORT).show();
+				
+				
+			// OPERATION BUTTONS
+			// ++++++++++++++++++++++++++++++
+			case R.id.buttonAdd:
+				//CURRENT_ACTION = ADDITION;
+				//valueOne = Double.parseDouble(String.valueOf(textDisplay.getText()));
+				//clearedOnce = false;
+				if (resultIsEmpty) {
+					resultIsEmpty = false;
+				}
+				dotPresence = false;
+				textDisplay.setText(textDisplay.getText() + "+");
+				//textDisplay.setText("");
+				//textHistory.setText(valueOne + " + ");
+				
+				/*if (Double.isNaN(valueOne)){
+					valueOne = Double.parseDouble(String.valueOf(textDisplay.getText()));
+				} else {
+					valueTwo = Double.parseDouble(textDisplay.getText().toString());
+					valueOne = valueOne + valueTwo;
+				}*/
+				
+				//textHistory.setText(valueOne + " + ");
+				//textDisplay.setText(null);
 				break;
-			case R.id.buttonMultiply:
-				Toast.makeText(this, "*", Toast.LENGTH_SHORT).show();
-				break;
+			
+			// ------------------------------
 			case R.id.buttonSubtract:
-				Toast.makeText(this, "-", Toast.LENGTH_SHORT).show();
+				//CURRENT_ACTION = SUBTRACTION;
+				if (resultIsEmpty) {
+					resultIsEmpty = false;
+				}
+				dotPresence = false;
+				textDisplay.setText(textDisplay.getText() + "-");
+				
 				break;
+				
+			// ******************************
+			case R.id.buttonMultiply:
+				//CURRENT_ACTION = MULTIPLICATION;
+				if (resultIsEmpty) {
+					resultIsEmpty = false;
+				}
+				dotPresence = false;
+				textDisplay.setText(textDisplay.getText() + "*");
+				break;
+				
+			// //////////////////////////////
+			case R.id.buttonDivide:
+				//CURRENT_ACTION = DIVISION;
+				if (resultIsEmpty) {
+					resultIsEmpty = false;
+				}
+				dotPresence = false;
+				textDisplay.setText(textDisplay.getText() + "/");
+				break;
+				
+			
+			// ==============================
+			case R.id.buttonEqual:
+				if (resultIsEmpty) break;
+				//if (action == +) textDisplay.setText(String.valueOf(valueOne + valueTwo));
+				
+				/*
+				if(!Double.isNaN(valueOne)) {
+		            valueTwo = Double.parseDouble(binding.editText.getText().toString());
+		            binding.editText.setText(null);
+		
+		            if(CURRENT_ACTION == ADDITION)
+		                valueOne = this.valueOne + valueTwo;
+		            else if(CURRENT_ACTION == SUBTRACTION)
+		                valueOne = this.valueOne - valueTwo;
+		            else if(CURRENT_ACTION == MULTIPLICATION)
+		                valueOne = this.valueOne * valueTwo;
+		            else if(CURRENT_ACTION == DIVISION)
+		                valueOne = this.valueOne / valueTwo;
+		        }
+		        else {
+		            try {
+		                valueOne = Double.parseDouble(binding.editText.getText().toString());
+		            }
+		            catch (Exception e){}
+		        }
+				*/
+				
+				/*
+				num1 = Double.parseDouble(etNum1.getText().toString());
+			    num2 = Double.parseDouble(etNum2.getText().toString());
+			    */
+				
+				CURRENT_ACTION = EMPTY;
+				break;
+				
+			
+				
+			
 			
 			
 			default:

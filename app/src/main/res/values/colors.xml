@@ -5,6 +5,7 @@
     <color name="colorAccent">#D81B60</color>
 
     <color name="btn_gradient_blue">#CADDE3</color>
+    <color name="btn_gradient_blue_pressed">#9FD3E4</color>
     <color name="btn_gradient_orange">#ffc64c</color>
     <color name="btn_stroke_gray">#DDD</color>
 </resources>

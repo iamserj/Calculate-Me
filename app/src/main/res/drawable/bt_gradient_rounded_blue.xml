@@ -6,11 +6,11 @@
         <shape android:shape="rectangle">
             <gradient android:type="radial"
                 android:gradientRadius="200%p"
-                android:startColor="#FF0000"
+                android:startColor="@color/btn_gradient_blue"
                 android:endColor="@android:color/white" />
             <stroke android:color="@color/btn_stroke_gray"
                 android:width="1dp"/>
-            <corners android:radius="5dp"/>
+            <corners android:radius="10dp"/>
         </shape>
     </item>
 
@@ -19,11 +19,11 @@
         <shape android:shape="rectangle">
             <gradient android:type="radial"
                 android:gradientRadius="200%p"
-                android:startColor="#0000FF"
+                android:startColor="@color/btn_gradient_blue_pressed"
                 android:endColor="@android:color/white" />
             <stroke android:color="@color/btn_stroke_gray"
                 android:width="1dp"/>
-            <corners android:radius="5dp"/>
+            <corners android:radius="10dp"/>
         </shape>
     </item>
 
@@ -36,7 +36,7 @@
                 android:endColor="@android:color/white" />
             <stroke android:color="@color/btn_stroke_gray"
                 android:width="1dp"/>
-            <corners android:radius="5dp"/>
+            <corners android:radius="10dp"/>
         </shape>
     </item>
 </selector>
