@@ -2,6 +2,7 @@ package ru.iamserj.calculator;
 
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -60,7 +61,6 @@ public class MainActivity extends Activity implements OnClickListener {
 		
 		textDisplay = findViewById(R.id.txtDisplay);
 		textHistory = findViewById(R.id.txtHistory);
-		// set text => String.valueOf(intValue)
 		
 		button0 = findViewById(R.id.button0);
 		button1 = findViewById(R.id.button1);

@@ -6,6 +6,9 @@
 
     <color name="btn_gradient_blue">#CADDE3</color>
     <color name="btn_gradient_blue_pressed">#9FD3E4</color>
-    <color name="btn_gradient_orange">#ffc64c</color>
+    <color name="btn_gradient_orange">#FFC64C</color>
+    <color name="btn_gradient_orange_pressed">#FDB519</color>
     <color name="btn_stroke_gray">#DDD</color>
+	<color name="display_bg_color">#BDB27C</color>
+	<color name="display_bg_border_color">#2B2B2B</color>
 </resources>

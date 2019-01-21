@@ -19,9 +19,12 @@
 			android:layout_weight="1"
 			android:textSize="@dimen/result_text_size"
 			android:maxLines="1"
-			android:maxLength="16"
+			android:maxLength="10"
 			android:gravity="center|end"
-			android:text="@string/zero"/>
+			android:text="@string/zero"
+			android:background="@drawable/display_bg"
+			android:padding="4dp"
+			android:fontFamily="@font/digital7"/>
 
 	<EditText
 			android:id="@+id/txtHistory"
