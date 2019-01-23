@@ -2,16 +2,14 @@ package ru.iamserj.calculator;
 
 
 import android.app.Activity;
-import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.text.DecimalFormat;
 
 public class MainActivity extends Activity implements OnClickListener {
 	
@@ -44,8 +42,11 @@ public class MainActivity extends Activity implements OnClickListener {
 	boolean resultIsEmpty = true;
 	boolean clearedOnce = false;
 	boolean dotPresence = false;
+	boolean bracketOpened = false;
+	boolean bracketWithSignAdded = false;
+	boolean lastDigitIsNumeric = false;
 	
-	TextView textDisplay, textHistory;
+	TextView textDisplay;
 	
 	Button button0, button1, button2, button3, button4, button5, button6, button7, button8, button9;
 	Button buttonBackspace, buttonBrackets, buttonInvert, buttonClear, buttonDot, buttonEqual;
@@ -60,7 +61,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_main);
 		
 		textDisplay = findViewById(R.id.txtDisplay);
-		textHistory = findViewById(R.id.txtHistory);
+		//textHistory = findViewById(R.id.txtHistory);
 		
 		button0 = findViewById(R.id.button0);
 		button1 = findViewById(R.id.button1);
@@ -108,7 +109,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	
 	@Override
 	public void onClick(View view) {
-		
+		String currentText = textDisplay.getText().toString();
 		if (resultIsEmpty) {
 			switch (view.getId()) {
 				//case R.id.button0:
@@ -122,79 +123,122 @@ public class MainActivity extends Activity implements OnClickListener {
 				case R.id.button8:
 				case R.id.button9:
 					resultIsEmpty = false;
-					textDisplay.setText("");
+					//textDisplay.setText("");
+					currentText = "";
 					break;
 			}
 		}
 		switch (view.getId()) {
 			
 			case R.id.button0:
-				if (resultIsEmpty) {
-					break;
-				}
-				textDisplay.setText(textDisplay.getText() + "0");
+				if (resultIsEmpty) break;
+				textDisplay.setText(currentText + "0");
+				lastDigitIsNumeric = true;
 				break;
 			case R.id.button1:
-				textDisplay.setText(textDisplay.getText() + "1");
+				textDisplay.setText(currentText + "1");
+				lastDigitIsNumeric = true;
 				break;
 			case R.id.button2:
-				textDisplay.setText(textDisplay.getText() + "2");
+				textDisplay.setText(currentText + "2");
+				lastDigitIsNumeric = true;
 				break;
 			case R.id.button3:
-				textDisplay.setText(textDisplay.getText() + "3");
+				textDisplay.setText(currentText + "3");
+				lastDigitIsNumeric = true;
 				break;
 			case R.id.button4:
-				textDisplay.setText(textDisplay.getText() + "4");
+				textDisplay.setText(currentText + "4");
+				lastDigitIsNumeric = true;
 				break;
 			case R.id.button5:
-				textDisplay.setText(textDisplay.getText() + "5");
+				textDisplay.setText(currentText + "5");
+				lastDigitIsNumeric = true;
 				break;
 			case R.id.button6:
-				textDisplay.setText(textDisplay.getText() + "6");
+				textDisplay.setText(currentText + "6");
+				lastDigitIsNumeric = true;
 				break;
 			case R.id.button7:
-				textDisplay.setText(textDisplay.getText() + "7");
+				textDisplay.setText(currentText + "7");
+				lastDigitIsNumeric = true;
 				break;
 			case R.id.button8:
-				textDisplay.setText(textDisplay.getText() + "8");
+				textDisplay.setText(currentText + "8");
+				lastDigitIsNumeric = true;
 				break;
 			case R.id.button9:
-				textDisplay.setText(textDisplay.getText() + "9");
+				textDisplay.setText(currentText + "9");
+				lastDigitIsNumeric = true;
 				break;
 				
 				
 			// UTILS BUTTONS
 			case R.id.buttonBackspace:
 				if (!resultIsEmpty) {
-					String resData = textDisplay.getText().toString();
-					if (resData.length() == 1) {
+					//String resData = textDisplay.getText().toString();
+					if (currentText.length() == 1) {
 						resultIsEmpty = true;
-						resData = getResources().getString(R.string.zero);      // set 0
-					} else if (resData.length() > 1) {
+						currentText = getResources().getString(R.string.zero);      // set 0
+					} else if (currentText.length() > 1) {
 						//String negativeSymbol = getResources().getString(R.string.sub); // subtraction sign
-						if (resData.length() == 2 && resultIsNegative) {
+						if (currentText.length() == 2 && resultIsNegative) {
 							resultIsNegative = false;
 							resultIsEmpty = true;
-							resData = getResources().getString(R.string.zero);  // set 0
+							currentText = getResources().getString(R.string.zero);  // set 0
 						} else {
-							resData = resData.substring(0, resData.length() - 1);   // just remove last digit
+							currentText = currentText.substring(0, currentText.length() - 1);   // just remove last digit
 						}
 					}
-					textDisplay.setText(resData);
+					textDisplay.setText(currentText);
 				}
 				break;
+				
 			case R.id.buttonBrackets:
-				break;
-			case R.id.buttonInvert:
-				String resData = textDisplay.getText().toString();
-				if (resultIsNegative) {
-					textDisplay.setText(resData.substring(1));
+				//lastDigitIsNumeric = false;
+				
+				if (resultIsEmpty) {
+					resultIsEmpty = false;
+					currentText = "";
+					textDisplay.setText("(");
+					bracketOpened = true;
+					break;
+				}
+				
+				if (bracketOpened && currentText.endsWith("(")) {
+					int cutEnd = bracketWithSignAdded ? 4 : 1;      // number of digits to cut from end
+					currentText = currentText.substring(0, currentText.length() - cutEnd);
+					//Log.d("---------", currentText);
+					if (currentText.length() == 0) {
+						resultIsEmpty = true;
+						textDisplay.setText("0");
+					} else {
+						textDisplay.setText(currentText);
+					}
+				} else if (!bracketOpened) {
+					if (currentText.endsWith(")") || lastDigitIsNumeric) {
+						textDisplay.setText(currentText + " * (");
+						bracketWithSignAdded = true;
+					}
 				} else {
-					textDisplay.setText("-" + resData);
+					textDisplay.setText(bracketOpened ? currentText + ")" : currentText + "(");
+				}
+				bracketOpened = !bracketOpened;
+				break;
+				
+			case R.id.buttonInvert:
+				//String resData = textDisplay.getText().toString();
+				if (resultIsNegative) {
+					textDisplay.setText(currentText.substring(1));
+				} else {
+					textDisplay.setText(" - " + currentText);
 				}
 				resultIsNegative = !resultIsNegative;
 				break;
+				
 			case R.id.buttonClear:
+				lastDigitIsNumeric = false;
+				
 				if (!clearedOnce) {
 					clearedOnce = true;
 					resultIsEmpty = true;
@@ -207,13 +251,14 @@ public class MainActivity extends Activity implements OnClickListener {
 					dotPresence = false;
 					resultIsNegative = false;
 					textDisplay.setText(getResources().getString(R.string.zero));
-					textHistory.setText("");
+					//textHistory.setText("");
 				}
 				break;
+				
 			case R.id.buttonDot:
 				if (!dotPresence) {
 					dotPresence = true;
-					textDisplay.setText(textDisplay.getText() + ".");
+					textDisplay.setText(currentText + ".");
 					resultIsEmpty = false;
 				}
 				break;
@@ -222,6 +267,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			// OPERATION BUTTONS
 			// ++++++++++++++++++++++++++++++
 			case R.id.buttonAdd:
+				lastDigitIsNumeric = false;
 				//CURRENT_ACTION = ADDITION;
 				//valueOne = Double.parseDouble(String.valueOf(textDisplay.getText()));
 				//clearedOnce = false;
@@ -229,7 +275,7 @@ public class MainActivity extends Activity implements OnClickListener {
 					resultIsEmpty = false;
 				}
 				dotPresence = false;
-				textDisplay.setText(textDisplay.getText() + "+");
+				textDisplay.setText(currentText + " + ");
 				//textDisplay.setText("");
 				//textHistory.setText(valueOne + " + ");
 				
@@ -246,38 +292,42 @@ public class MainActivity extends Activity implements OnClickListener {
 			
 			// ------------------------------
 			case R.id.buttonSubtract:
+				lastDigitIsNumeric = false;
 				//CURRENT_ACTION = SUBTRACTION;
 				if (resultIsEmpty) {
 					resultIsEmpty = false;
 				}
 				dotPresence = false;
-				textDisplay.setText(textDisplay.getText() + "-");
+				textDisplay.setText(currentText + " - ");
 				
 				break;
 				
 			// ******************************
 			case R.id.buttonMultiply:
+				lastDigitIsNumeric = false;
 				//CURRENT_ACTION = MULTIPLICATION;
 				if (resultIsEmpty) {
 					resultIsEmpty = false;
 				}
 				dotPresence = false;
-				textDisplay.setText(textDisplay.getText() + "*");
+				textDisplay.setText(currentText + " * ");
 				break;
 				
 			// //////////////////////////////
 			case R.id.buttonDivide:
+				lastDigitIsNumeric = false;
 				//CURRENT_ACTION = DIVISION;
 				if (resultIsEmpty) {
 					resultIsEmpty = false;
 				}
 				dotPresence = false;
-				textDisplay.setText(textDisplay.getText() + "/");
+				textDisplay.setText(currentText + " / ");
 				break;
 				
 			
 			// ==============================
 			case R.id.buttonEqual:
+				lastDigitIsNumeric = false;
 				if (resultIsEmpty) break;
 				//if (action == +) textDisplay.setText(String.valueOf(valueOne + valueTwo));
 				
