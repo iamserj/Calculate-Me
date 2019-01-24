@@ -13,38 +13,29 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnClickListener {
 	
-	public static final String CLEAR = "C" ;
-	//public static final String CLEARMEMORY = "MC";
-	//public static final String ADDTOMEMORY = "M+";
-	//public static final String SUBTRACTFROMMEMORY = "M-";
-	//public static final String RECALLMEMORY = "MR";
 	//public static final String SQUAREROOT = "√";
 	//public static final String SQUARED = "x²";
 	//public static final String INVERT = "1/x";
 	//public static final String TOGGLESIGN = "+/-";
-	//public static final String SINE = "sin";
-	//public static final String COSINE = "cos";
-	//public static final String TANGENT = "tan";
+	//DecimalFormat decimalFormat = new DecimalFormat("#.##########");
 	
+	public static final String CLEAR = "C" ;
 	private static final char ADDITION = '+';
 	private static final char SUBTRACTION = '-';
 	private static final char MULTIPLICATION = '*';
 	private static final char DIVISION = '/';
 	private static final char EMPTY = '0';
-	private char CURRENT_ACTION;
-	//DecimalFormat decimalFormat = new DecimalFormat("#.##########");
-	
 	
 	private double valueOne = 0; //Double.MIN_VALUE;
 	private double valueTwo = 0; //Double.MIN_VALUE;
-	private boolean resultIsNegative = false;
 	
-	boolean resultIsEmpty = true;
-	boolean clearedOnce = false;
-	boolean dotPresence = false;
-	boolean bracketOpened = false;
-	boolean bracketWithSignAdded = false;
-	boolean lastDigitIsNumeric = false;
+	private boolean resultIsNegative = false;
+	private boolean resultIsEmpty = true;
+	private boolean clearedOnce = false;
+	private boolean dotPresence = false;
+	private boolean bracketOpened = false;
+	private boolean bracketWithSignAdded = false;
+	private boolean lastDigitIsNumeric = true;
 	
 	TextView textDisplay;
 	
@@ -104,7 +95,6 @@ public class MainActivity extends Activity implements OnClickListener {
 		buttonEqual.setOnClickListener(this);
 		buttonMultiply.setOnClickListener(this);
 		buttonSubtract.setOnClickListener(this);
-		
 	}
 	
 	@Override
@@ -176,7 +166,6 @@ public class MainActivity extends Activity implements OnClickListener {
 			// UTILS BUTTONS
 			case R.id.buttonBackspace:
 				if (!resultIsEmpty) {
-					//String resData = textDisplay.getText().toString();
 					if (currentText.length() == 1) {
 						resultIsEmpty = true;
 						currentText = getResources().getString(R.string.zero);      // set 0
@@ -195,35 +184,42 @@ public class MainActivity extends Activity implements OnClickListener {
 				break;
 				
 			case R.id.buttonBrackets:
-				//lastDigitIsNumeric = false;
 				
 				if (resultIsEmpty) {
 					resultIsEmpty = false;
-					currentText = "";
 					textDisplay.setText("(");
 					bracketOpened = true;
 					break;
 				}
 				
-				if (bracketOpened && currentText.endsWith("(")) {
-					int cutEnd = bracketWithSignAdded ? 4 : 1;      // number of digits to cut from end
-					currentText = currentText.substring(0, currentText.length() - cutEnd);
-					//Log.d("---------", currentText);
-					if (currentText.length() == 0) {
-						resultIsEmpty = true;
-						textDisplay.setText("0");
+				if (bracketOpened) {
+					if (currentText.endsWith("(")) {
+						int cutEnd = bracketWithSignAdded ? 2 : 1;      // number of digits to cut from end
+						currentText = currentText.substring(0, currentText.length() - cutEnd);
+						if (currentText.length() == 0) {
+							resultIsEmpty = true;
+							textDisplay.setText("0");
+						} else {
+							textDisplay.setText(currentText);
+						}
+						bracketWithSignAdded = false;
+					} else if (!lastDigitIsNumeric) {
+						break;
 					} else {
-						textDisplay.setText(currentText);
-					}
-				} else if (!bracketOpened) {
-					if (currentText.endsWith(")") || lastDigitIsNumeric) {
-						textDisplay.setText(currentText + " * (");
-						bracketWithSignAdded = true;
+						textDisplay.setText(currentText + ")");
+						bracketWithSignAdded = false;
 					}
 				} else {
-					textDisplay.setText(bracketOpened ? currentText + ")" : currentText + "(");
+					if (currentText.endsWith(")") || lastDigitIsNumeric) {
+						textDisplay.setText(currentText + "*(");
+						bracketWithSignAdded = true;
+					} else {
+						textDisplay.setText(currentText + "(");
+						bracketWithSignAdded = false;
+					}
 				}
 				bracketOpened = !bracketOpened;
+				Log.d("---------", bracketOpened+"");
 				break;
 				
 			case R.id.buttonInvert:
@@ -231,7 +227,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				if (resultIsNegative) {
 					textDisplay.setText(currentText.substring(1));
 				} else {
-					textDisplay.setText(" - " + currentText);
+					textDisplay.setText("-" + currentText);
 				}
 				resultIsNegative = !resultIsNegative;
 				break;
@@ -256,72 +252,65 @@ public class MainActivity extends Activity implements OnClickListener {
 				break;
 				
 			case R.id.buttonDot:
-				if (!dotPresence) {
+				if (!dotPresence && lastDigitIsNumeric) {
 					dotPresence = true;
 					textDisplay.setText(currentText + ".");
 					resultIsEmpty = false;
 				}
+				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
 				break;
 				
 				
 			// OPERATION BUTTONS
 			// ++++++++++++++++++++++++++++++
 			case R.id.buttonAdd:
+				if (bracketOpened && currentText.endsWith("(")) break;
+				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
 				lastDigitIsNumeric = false;
-				//CURRENT_ACTION = ADDITION;
-				//valueOne = Double.parseDouble(String.valueOf(textDisplay.getText()));
-				//clearedOnce = false;
+				
 				if (resultIsEmpty) {
 					resultIsEmpty = false;
 				}
 				dotPresence = false;
-				textDisplay.setText(currentText + " + ");
-				//textDisplay.setText("");
-				//textHistory.setText(valueOne + " + ");
+				textDisplay.setText(currentText + "+");
 				
-				/*if (Double.isNaN(valueOne)){
-					valueOne = Double.parseDouble(String.valueOf(textDisplay.getText()));
-				} else {
-					valueTwo = Double.parseDouble(textDisplay.getText().toString());
-					valueOne = valueOne + valueTwo;
-				}*/
-				
-				//textHistory.setText(valueOne + " + ");
-				//textDisplay.setText(null);
 				break;
 			
 			// ------------------------------
 			case R.id.buttonSubtract:
+				if (bracketOpened && currentText.endsWith("(")) break;
+				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
 				lastDigitIsNumeric = false;
-				//CURRENT_ACTION = SUBTRACTION;
 				if (resultIsEmpty) {
 					resultIsEmpty = false;
 				}
 				dotPresence = false;
-				textDisplay.setText(currentText + " - ");
+				textDisplay.setText(currentText + "-");
 				
 				break;
 				
 			// ******************************
 			case R.id.buttonMultiply:
+				if (bracketOpened && currentText.endsWith("(")) break;
+				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
 				lastDigitIsNumeric = false;
-				//CURRENT_ACTION = MULTIPLICATION;
 				if (resultIsEmpty) {
 					resultIsEmpty = false;
 				}
 				dotPresence = false;
-				textDisplay.setText(currentText + " * ");
+				textDisplay.setText(currentText + "*");
 				break;
 				
 			// //////////////////////////////
 			case R.id.buttonDivide:
+				if (bracketOpened && currentText.endsWith("(")) break;
+				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
 				lastDigitIsNumeric = false;
-				//CURRENT_ACTION = DIVISION;
 				if (resultIsEmpty) {
 					resultIsEmpty = false;
 				}
 				dotPresence = false;
-				textDisplay.setText(currentText + " / ");
+				textDisplay.setText(currentText + "/");
 				break;
 				
 			
@@ -329,21 +318,26 @@ public class MainActivity extends Activity implements OnClickListener {
 			case R.id.buttonEqual:
 				lastDigitIsNumeric = false;
 				if (resultIsEmpty) break;
-				//if (action == +) textDisplay.setText(String.valueOf(valueOne + valueTwo));
 				
-				/*
+				// num1 = Double.parseDouble(etNum1.getText().toString());
+				// num2 = Double.parseDouble(etNum2.getText().toString());
+				// valueOne = Double.parseDouble(String.valueOf(textDisplay.getText()));
+				
+				/*if (Double.isNaN(valueOne)){
+					valueOne = Double.parseDouble(String.valueOf(textDisplay.getText()));
+				} else {
+					valueTwo = Double.parseDouble(textDisplay.getText().toString());
+					valueOne = valueOne + valueTwo;
+				}
+				
 				if(!Double.isNaN(valueOne)) {
 		            valueTwo = Double.parseDouble(binding.editText.getText().toString());
 		            binding.editText.setText(null);
 		
-		            if(CURRENT_ACTION == ADDITION)
-		                valueOne = this.valueOne + valueTwo;
-		            else if(CURRENT_ACTION == SUBTRACTION)
-		                valueOne = this.valueOne - valueTwo;
-		            else if(CURRENT_ACTION == MULTIPLICATION)
-		                valueOne = this.valueOne * valueTwo;
-		            else if(CURRENT_ACTION == DIVISION)
-		                valueOne = this.valueOne / valueTwo;
+		            if(CURRENT_ACTION == ADDITION) valueOne = this.valueOne + valueTwo;
+		            else if(CURRENT_ACTION == SUBTRACTION) valueOne = this.valueOne - valueTwo;
+		            else if(CURRENT_ACTION == MULTIPLICATION) valueOne = this.valueOne * valueTwo;
+		            else if(CURRENT_ACTION == DIVISION) valueOne = this.valueOne / valueTwo;
 		        }
 		        else {
 		            try {
@@ -353,17 +347,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		        }
 				*/
 				
-				/*
-				num1 = Double.parseDouble(etNum1.getText().toString());
-			    num2 = Double.parseDouble(etNum2.getText().toString());
-			    */
-				
-				CURRENT_ACTION = EMPTY;
 				break;
 				
-			
-				
-			
 			
 			
 			default:

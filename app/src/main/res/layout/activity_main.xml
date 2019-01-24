@@ -37,55 +37,55 @@
 				  android:layout_marginBottom="50dp"
 				  android:fontFamily="@font/digital7"/>
 
+
 		<LinearLayout android:layout_width="match_parent"
 					  android:layout_height="0dp"
 					  android:layout_weight="1"
 					  android:orientation="horizontal">
-			<Button
-					android:id="@+id/buttonClear"
+
+			<Button android:id="@+id/buttonClear"
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="match_parent"
 					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_blue"
+					android:background="@drawable/bt_gradient_rounded_green"
 					android:text="@string/clear"
 					android:textSize="@dimen/btn_clear_text_size"/>
-			<Button
-					android:id="@+id/buttonBrackets"
+
+			<Button android:id="@+id/buttonBrackets"
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="match_parent"
 					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_blue"
+					android:background="@drawable/bt_gradient_rounded_green"
 					android:text="@string/brackets"
 					android:textSize="@dimen/btn_text_size"/>
-			<Button
-					android:id="@+id/buttonInvert"
+
+			<Button android:id="@+id/buttonInvert"
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="match_parent"
 					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_blue"
+					android:background="@drawable/bt_gradient_rounded_green"
 					android:text="@string/invert"
 					android:textSize="@dimen/btn_text_size"/>
-			<Button
-					android:id="@+id/buttonDivide"
+
+			<Button android:id="@+id/buttonDivide"
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="match_parent"
 					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_blue"
+					android:background="@drawable/bt_gradient_rounded_green"
 					android:text="@string/div"
 					android:textSize="@dimen/btn_text_size"/>
 		</LinearLayout>
 
-		<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="0dp"
-				android:layout_weight="1"
-				android:orientation="horizontal">
-			<Button
-					android:id="@+id/button7"
+		<LinearLayout android:layout_width="match_parent"
+					  android:layout_height="0dp"
+					  android:layout_weight="1"
+					  android:orientation="horizontal">
+
+			<Button android:id="@+id/button7"
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="match_parent"
@@ -93,8 +93,8 @@
 					android:background="@drawable/bt_gradient_rounded_blue"
 					android:text="@string/seven"
 					android:textSize="@dimen/btn_text_size"/>
-			<Button
-					android:id="@+id/button8"
+
+			<Button android:id="@+id/button8"
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="match_parent"
@@ -102,8 +102,8 @@
 					android:background="@drawable/bt_gradient_rounded_blue"
 					android:text="@string/eight"
 					android:textSize="@dimen/btn_text_size"/>
-			<Button
-					android:id="@+id/button9"
+
+			<Button android:id="@+id/button9"
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="match_parent"
@@ -111,24 +111,23 @@
 					android:background="@drawable/bt_gradient_rounded_blue"
 					android:text="@string/nine"
 					android:textSize="@dimen/btn_text_size"/>
-			<Button
-					android:id="@+id/buttonMultiply"
+
+			<Button android:id="@+id/buttonMultiply"
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="match_parent"
 					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_blue"
+					android:background="@drawable/bt_gradient_rounded_green"
 					android:text="@string/mul"
 					android:textSize="@dimen/btn_text_size"/>
 		</LinearLayout>
 
-		<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="0dp"
-				android:layout_weight="1"
-				android:orientation="horizontal">
-			<Button
-					android:id="@+id/button4"
+		<LinearLayout android:layout_width="match_parent"
+					  android:layout_height="0dp"
+					  android:layout_weight="1"
+					  android:orientation="horizontal">
+
+			<Button android:id="@+id/button4"
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="match_parent"
@@ -136,8 +135,8 @@
 					android:background="@drawable/bt_gradient_rounded_blue"
 					android:text="@string/four"
 					android:textSize="@dimen/btn_text_size"/>
-			<Button
-					android:id="@+id/button5"
+
+			<Button android:id="@+id/button5"
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="match_parent"
@@ -145,8 +144,8 @@
 					android:background="@drawable/bt_gradient_rounded_blue"
 					android:text="@string/five"
 					android:textSize="@dimen/btn_text_size"/>
-			<Button
-					android:id="@+id/button6"
+
+			<Button android:id="@+id/button6"
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="match_parent"
@@ -154,24 +153,23 @@
 					android:background="@drawable/bt_gradient_rounded_blue"
 					android:text="@string/six"
 					android:textSize="@dimen/btn_text_size"/>
-			<Button
-					android:id="@+id/buttonSubtract"
+
+			<Button android:id="@+id/buttonSubtract"
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="match_parent"
 					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_blue"
+					android:background="@drawable/bt_gradient_rounded_green"
 					android:text="@string/sub"
 					android:textSize="@dimen/btn_text_size"/>
 		</LinearLayout>
 
-		<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="0dp"
-				android:layout_weight="1"
-				android:orientation="horizontal">
-			<Button
-					android:id="@+id/button1"
+		<LinearLayout android:layout_width="match_parent"
+					  android:layout_height="0dp"
+					  android:layout_weight="1"
+					  android:orientation="horizontal">
+
+			<Button android:id="@+id/button1"
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="match_parent"
@@ -179,8 +177,8 @@
 					android:background="@drawable/bt_gradient_rounded_blue"
 					android:text="@string/one"
 					android:textSize="@dimen/btn_text_size"/>
-			<Button
-					android:id="@+id/button2"
+
+			<Button android:id="@+id/button2"
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="match_parent"
@@ -188,8 +186,8 @@
 					android:background="@drawable/bt_gradient_rounded_blue"
 					android:text="@string/two"
 					android:textSize="@dimen/btn_text_size"/>
-			<Button
-					android:id="@+id/button3"
+
+			<Button android:id="@+id/button3"
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="match_parent"
@@ -197,24 +195,23 @@
 					android:background="@drawable/bt_gradient_rounded_blue"
 					android:text="@string/three"
 					android:textSize="@dimen/btn_text_size"/>
-			<Button
-					android:id="@+id/buttonAdd"
+
+			<Button android:id="@+id/buttonAdd"
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="match_parent"
 					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_blue"
+					android:background="@drawable/bt_gradient_rounded_green"
 					android:text="@string/add"
 					android:textSize="@dimen/btn_text_size"/>
 		</LinearLayout>
 
-		<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="0dp"
-				android:layout_weight="1"
-				android:orientation="horizontal">
-			<Button
-					android:id="@+id/button0"
+		<LinearLayout android:layout_width="match_parent"
+					  android:layout_height="0dp"
+					  android:layout_weight="1"
+					  android:orientation="horizontal">
+
+			<Button android:id="@+id/button0"
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="match_parent"
@@ -222,8 +219,8 @@
 					android:background="@drawable/bt_gradient_rounded_blue"
 					android:text="@string/zero"
 					android:textSize="@dimen/btn_text_size"/>
-			<Button
-					android:id="@+id/buttonDot"
+
+			<Button android:id="@+id/buttonDot"
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="match_parent"
@@ -232,8 +229,8 @@
 					android:text="@string/dot"
 					android:textFontWeight="700"
 					android:textSize="@dimen/btn_text_size"/>
-			<Button
-					android:id="@+id/buttonBackspace"
+
+			<Button android:id="@+id/buttonBackspace"
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="match_parent"
@@ -241,8 +238,8 @@
 					android:background="@drawable/bt_gradient_rounded_blue"
 					android:text="@string/backspace"
 					android:textSize="@dimen/btn_text_size"/>
-			<Button
-					android:id="@+id/buttonEqual"
+
+			<Button android:id="@+id/buttonEqual"
 					android:layout_width="0dp"
 					android:layout_weight="1"
 					android:layout_height="match_parent"
@@ -251,7 +248,6 @@
 					android:text="@string/equal"
 					android:textSize="@dimen/btn_text_size"/>
 		</LinearLayout>
-
 
 	</LinearLayout>
 </FrameLayout>
