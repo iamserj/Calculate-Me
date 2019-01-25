@@ -19,12 +19,13 @@ public class MainActivity extends Activity implements OnClickListener {
 	//public static final String TOGGLESIGN = "+/-";
 	//DecimalFormat decimalFormat = new DecimalFormat("#.##########");
 	
-	public static final String CLEAR = "C" ;
+	private static final char CLEAR = 'C' ;
 	private static final char ADDITION = '+';
 	private static final char SUBTRACTION = '-';
 	private static final char MULTIPLICATION = '*';
 	private static final char DIVISION = '/';
 	private static final char EMPTY = '0';
+	private static final char DOT = '.';
 	
 	private double valueOne = 0; //Double.MIN_VALUE;
 	private double valueTwo = 0; //Double.MIN_VALUE;
@@ -165,22 +166,25 @@ public class MainActivity extends Activity implements OnClickListener {
 				
 			// UTILS BUTTONS
 			case R.id.buttonBackspace:
-				if (!resultIsEmpty) {
-					if (currentText.length() == 1) {
+				if (resultIsEmpty) break;
+				
+				// TODO: add lastDigitIsNumeric checker
+				if (currentText.length() == 1) {
+					resultIsEmpty = true;
+					currentText = getResources().getString(R.string.zero);                  // set 0
+				} else if (currentText.length() > 1) {
+					//String negativeSymbol = getResources().getString(R.string.sub);       // subtraction sign
+					if (currentText.length() == 2 && resultIsNegative) {
+						resultIsNegative = false;
 						resultIsEmpty = true;
-						currentText = getResources().getString(R.string.zero);      // set 0
-					} else if (currentText.length() > 1) {
-						//String negativeSymbol = getResources().getString(R.string.sub); // subtraction sign
-						if (currentText.length() == 2 && resultIsNegative) {
-							resultIsNegative = false;
-							resultIsEmpty = true;
-							currentText = getResources().getString(R.string.zero);  // set 0
-						} else {
-							currentText = currentText.substring(0, currentText.length() - 1);   // just remove last digit
-						}
+						currentText = getResources().getString(R.string.zero);              // set 0
+					} else {
+						if (currentText.endsWith(".")) dotPresence = false;                 // remove dot
+						currentText = currentText.substring(0, currentText.length() - 1);   // just remove last digit
 					}
-					textDisplay.setText(currentText);
 				}
+				textDisplay.setText(currentText);
+				
 				break;
 				
 			case R.id.buttonBrackets:
@@ -193,7 +197,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				}
 				
 				if (bracketOpened) {
-					if (currentText.endsWith("(")) {
+					if (currentText.endsWith("(")) {                    // case "()"
 						int cutEnd = bracketWithSignAdded ? 2 : 1;      // number of digits to cut from end
 						currentText = currentText.substring(0, currentText.length() - cutEnd);
 						if (currentText.length() == 0) {
@@ -203,11 +207,12 @@ public class MainActivity extends Activity implements OnClickListener {
 							textDisplay.setText(currentText);
 						}
 						bracketWithSignAdded = false;
-					} else if (!lastDigitIsNumeric) {
+					} else if (!lastDigitIsNumeric) {                   // case (3+)
 						break;
-					} else {
+					} else {                                            // normal case (3+2)
 						textDisplay.setText(currentText + ")");
 						bracketWithSignAdded = false;
+						lastDigitIsNumeric = false;
 					}
 				} else {
 					if (currentText.endsWith(")") || lastDigitIsNumeric) {
@@ -251,13 +256,23 @@ public class MainActivity extends Activity implements OnClickListener {
 				}
 				break;
 				
+			// ..............................
 			case R.id.buttonDot:
-				if (!dotPresence && lastDigitIsNumeric) {
-					dotPresence = true;
-					textDisplay.setText(currentText + ".");
-					resultIsEmpty = false;
+				
+				if (dotPresence) {
+					if (currentText.endsWith(".")) {
+						dotPresence = false;
+						currentText = currentText.substring(0, currentText.length() - 1);
+						textDisplay.setText(currentText);
+					}
+				} else {
+					if (lastDigitIsNumeric) {
+						dotPresence = true;
+						textDisplay.setText(currentText + ".");
+						resultIsEmpty = false;
+					}
 				}
-				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
+				
 				break;
 				
 				
