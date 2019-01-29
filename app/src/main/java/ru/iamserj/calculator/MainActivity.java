@@ -2,7 +2,11 @@ package ru.iamserj.calculator;
 
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -47,12 +51,14 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		// TODO: save data on hide/restart activity
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		//if (getSupportActionBar() != null) { getSupportActionBar().hide(); }
 		setContentView(R.layout.activity_main);
 		
 		textDisplay = findViewById(R.id.txtDisplay);
+		// TODO: copy result to clipboard by tapping display
 		//textHistory = findViewById(R.id.txtHistory);
 		
 		button0 = findViewById(R.id.button0);
@@ -162,7 +168,8 @@ public class MainActivity extends Activity implements OnClickListener {
 				textDisplay.setText(currentText + "9");
 				lastDigitIsNumeric = true;
 				break;
-				
+			// TODO: number length 10 digits maximum
+			// TODO: add little dots 1.000.000
 				
 			// UTILS BUTTONS
 			case R.id.buttonBackspace:
@@ -228,7 +235,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				break;
 				
 			case R.id.buttonInvert:
-				//String resData = textDisplay.getText().toString();
+				// TODO: apply only to last number
 				if (resultIsNegative) {
 					textDisplay.setText(currentText.substring(1));
 				} else {
@@ -275,9 +282,10 @@ public class MainActivity extends Activity implements OnClickListener {
 				
 				break;
 				
-				
+			// TODO: don't allow two oper signs in a row
+			// TODO: change color for operation buttons
 			// OPERATION BUTTONS
-			// ++++++++++++++++++++++++++++++
+			// TODO: ++++++++++++++++++++++++++++++
 			case R.id.buttonAdd:
 				if (bracketOpened && currentText.endsWith("(")) break;
 				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
@@ -287,11 +295,14 @@ public class MainActivity extends Activity implements OnClickListener {
 					resultIsEmpty = false;
 				}
 				dotPresence = false;
-				textDisplay.setText(currentText + "+");
+				textDisplay.setText(currentText);
+				Spannable wordTwo = new SpannableString("+");
+				wordTwo.setSpan(new ForegroundColorSpan(Color.RED), 0, wordTwo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				textDisplay.append(wordTwo);
 				
 				break;
 			
-			// ------------------------------
+			// TODO: ------------------------------
 			case R.id.buttonSubtract:
 				if (bracketOpened && currentText.endsWith("(")) break;
 				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
@@ -304,7 +315,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				
 				break;
 				
-			// ******************************
+			// TODO: ******************************
 			case R.id.buttonMultiply:
 				if (bracketOpened && currentText.endsWith("(")) break;
 				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
@@ -316,7 +327,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				textDisplay.setText(currentText + "*");
 				break;
 				
-			// //////////////////////////////
+			// TODO: /////////////////////////////
 			case R.id.buttonDivide:
 				if (bracketOpened && currentText.endsWith("(")) break;
 				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
@@ -329,7 +340,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				break;
 				
 			
-			// ==============================
+			// TODO: ============================
 			case R.id.buttonEqual:
 				lastDigitIsNumeric = false;
 				if (resultIsEmpty) break;
@@ -372,3 +383,6 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 	
 }
+
+// TODO: lessen result font if viewport is small
+// TODO: landscape orientation
