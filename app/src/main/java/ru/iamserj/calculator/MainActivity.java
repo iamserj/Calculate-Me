@@ -6,7 +6,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -129,43 +131,43 @@ public class MainActivity extends Activity implements OnClickListener {
 			
 			case R.id.button0:
 				if (resultIsEmpty) break;
-				textDisplay.setText(currentText + "0");
+				setSpannedText(currentText + "0");
 				lastDigitIsNumeric = true;
 				break;
 			case R.id.button1:
-				textDisplay.setText(currentText + "1");
+				setSpannedText(currentText + "1");
 				lastDigitIsNumeric = true;
 				break;
 			case R.id.button2:
-				textDisplay.setText(currentText + "2");
+				setSpannedText(currentText + "2");
 				lastDigitIsNumeric = true;
 				break;
 			case R.id.button3:
-				textDisplay.setText(currentText + "3");
+				setSpannedText(currentText + "3");
 				lastDigitIsNumeric = true;
 				break;
 			case R.id.button4:
-				textDisplay.setText(currentText + "4");
+				setSpannedText(currentText + "4");
 				lastDigitIsNumeric = true;
 				break;
 			case R.id.button5:
-				textDisplay.setText(currentText + "5");
+				setSpannedText(currentText + "5");
 				lastDigitIsNumeric = true;
 				break;
 			case R.id.button6:
-				textDisplay.setText(currentText + "6");
+				setSpannedText(currentText + "6");
 				lastDigitIsNumeric = true;
 				break;
 			case R.id.button7:
-				textDisplay.setText(currentText + "7");
+				setSpannedText(currentText + "7");
 				lastDigitIsNumeric = true;
 				break;
 			case R.id.button8:
-				textDisplay.setText(currentText + "8");
+				setSpannedText(currentText + "8");
 				lastDigitIsNumeric = true;
 				break;
 			case R.id.button9:
-				textDisplay.setText(currentText + "9");
+				setSpannedText(currentText + "9");
 				lastDigitIsNumeric = true;
 				break;
 			// TODO: number length 10 digits maximum
@@ -190,15 +192,14 @@ public class MainActivity extends Activity implements OnClickListener {
 						currentText = currentText.substring(0, currentText.length() - 1);   // just remove last digit
 					}
 				}
-				textDisplay.setText(currentText);
-				
+				setSpannedText(currentText);
 				break;
 				
 			case R.id.buttonBrackets:
 				
 				if (resultIsEmpty) {
 					resultIsEmpty = false;
-					textDisplay.setText("(");
+					setSpannedText("(");
 					bracketOpened = true;
 					break;
 				}
@@ -211,22 +212,22 @@ public class MainActivity extends Activity implements OnClickListener {
 							resultIsEmpty = true;
 							textDisplay.setText("0");
 						} else {
-							textDisplay.setText(currentText);
+							setSpannedText(currentText);
 						}
 						bracketWithSignAdded = false;
 					} else if (!lastDigitIsNumeric) {                   // case (3+)
 						break;
 					} else {                                            // normal case (3+2)
-						textDisplay.setText(currentText + ")");
+						setSpannedText(currentText + ")");
 						bracketWithSignAdded = false;
 						lastDigitIsNumeric = false;
 					}
 				} else {
 					if (currentText.endsWith(")") || lastDigitIsNumeric) {
-						textDisplay.setText(currentText + "*(");
+						setSpannedText(currentText + "*(");
 						bracketWithSignAdded = true;
 					} else {
-						textDisplay.setText(currentText + "(");
+						setSpannedText(currentText + "(");
 						bracketWithSignAdded = false;
 					}
 				}
@@ -237,9 +238,9 @@ public class MainActivity extends Activity implements OnClickListener {
 			case R.id.buttonInvert:
 				// TODO: apply only to last number
 				if (resultIsNegative) {
-					textDisplay.setText(currentText.substring(1));
+					setSpannedText(currentText.substring(1));
 				} else {
-					textDisplay.setText("-" + currentText);
+					setSpannedText("-" + currentText);
 				}
 				resultIsNegative = !resultIsNegative;
 				break;
@@ -270,12 +271,12 @@ public class MainActivity extends Activity implements OnClickListener {
 					if (currentText.endsWith(".")) {
 						dotPresence = false;
 						currentText = currentText.substring(0, currentText.length() - 1);
-						textDisplay.setText(currentText);
+						setSpannedText(currentText);
 					}
 				} else {
 					if (lastDigitIsNumeric) {
 						dotPresence = true;
-						textDisplay.setText(currentText + ".");
+						setSpannedText(currentText + ".");
 						resultIsEmpty = false;
 					}
 				}
@@ -295,11 +296,7 @@ public class MainActivity extends Activity implements OnClickListener {
 					resultIsEmpty = false;
 				}
 				dotPresence = false;
-				textDisplay.setText(currentText);
-				Spannable wordTwo = new SpannableString("+");
-				wordTwo.setSpan(new ForegroundColorSpan(Color.RED), 0, wordTwo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				textDisplay.append(wordTwo);
-				
+				setSpannedText(currentText + "+");
 				break;
 			
 			// TODO: ------------------------------
@@ -311,7 +308,7 @@ public class MainActivity extends Activity implements OnClickListener {
 					resultIsEmpty = false;
 				}
 				dotPresence = false;
-				textDisplay.setText(currentText + "-");
+				setSpannedText(currentText + "-");
 				
 				break;
 				
@@ -324,7 +321,7 @@ public class MainActivity extends Activity implements OnClickListener {
 					resultIsEmpty = false;
 				}
 				dotPresence = false;
-				textDisplay.setText(currentText + "*");
+				setSpannedText(currentText + "*");
 				break;
 				
 			// TODO: /////////////////////////////
@@ -336,7 +333,7 @@ public class MainActivity extends Activity implements OnClickListener {
 					resultIsEmpty = false;
 				}
 				dotPresence = false;
-				textDisplay.setText(currentText + "/");
+				setSpannedText(currentText + "/");
 				break;
 				
 			
@@ -380,6 +377,37 @@ public class MainActivity extends Activity implements OnClickListener {
 			default:
 				Toast.makeText(this, "wtf?", Toast.LENGTH_LONG).show();
 		}
+	}
+	
+	private void setSpannedText(String str) {
+		textDisplay.setText("");
+		str = str.replaceAll("\u00A0","");
+		int count = 0;
+		for(int i =0; i < str.length(); i++) {
+			switch (str.charAt(i)) {
+				case '+':
+				case '-':
+				case '*':
+				case '/':
+					Spannable spacing = new SpannableString("\u00A0");
+					spacing.setSpan(new RelativeSizeSpan(0.5f), 0, spacing.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textDisplay.append(spacing);
+					
+					Spannable coloredSign = new SpannableString(String.valueOf(str.charAt(i)));
+					coloredSign.setSpan(new ForegroundColorSpan(Color.BLUE), 0, coloredSign.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textDisplay.append(coloredSign);
+					
+					spacing.setSpan(new RelativeSizeSpan(0.5f), 0, spacing.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					textDisplay.append(spacing);
+					break;
+				default:
+					textDisplay.append(String.valueOf(str.charAt(i)));
+			}
+		}
+		
+		
+		
+		
 	}
 	
 }
