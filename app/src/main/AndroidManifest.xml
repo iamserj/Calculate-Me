@@ -9,11 +9,22 @@
 			android:roundIcon="@mipmap/ic_launcher_round"
 			android:supportsRtl="true"
 			android:theme="@style/AppTheme">
-		<activity android:name=".MainActivity">
+		<activity android:name=".MainActivity"
+				  android:configChanges="orientation|screenSize">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
-
 				<category android:name="android.intent.category.LAUNCHER"/>
+				<!--action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" /-->
+				<!-- Accepts URIs that begin with "https://www.iamserj.ru/calculate-me" -->
+				<!--data android:scheme="https"
+					  android:host="www.iamserj.ru"
+					  android:pathPrefix="/calculate-me" /-->
+				<!-- note that the leading "/" is required for pathPrefix-->
+
+				<!-- Accepts URIs that begin with "iamserj://calculate-me" -->
+				<!--data android:scheme="iamserj" android:host="calculate-me" /-->
 			</intent-filter>
 		</activity>
 	</application>

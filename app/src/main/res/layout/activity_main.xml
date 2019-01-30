@@ -13,21 +13,44 @@
 			   android:background="@drawable/background_round_rect"
 			   android:layout_margin="5dp"/>
 
-	<TextView android:id="@+id/txtDisplay"
-			  android:layout_width="match_parent"
-			  android:layout_height="wrap_content"
-			  android:textSize="@dimen/result_text_size"
-			  android:singleLine="true"
-			  android:gravity="center|end"
-			  android:text="@string/zero"
-			  android:ellipsize="start"
-			  android:scrollHorizontally="true"
-			  android:background="@drawable/display_bg"
-			  android:padding="15dp"
-			  android:layout_marginTop="50dp"
-			  android:layout_marginLeft="20dp"
-			  android:layout_marginRight="20dp"
-			  android:fontFamily="@font/digital7"/>
+	<LinearLayout android:layout_width="match_parent"
+				  android:layout_height="wrap_content"
+				  android:orientation="vertical">
+
+		<TextView android:id="@+id/resultDisplay"
+				  android:layout_width="match_parent"
+				  android:layout_height="wrap_content"
+				  android:textSize="@dimen/result_text_size"
+				  android:singleLine="true"
+				  android:gravity="center|end"
+				  android:text="@string/zero"
+				  android:ellipsize="start"
+				  android:scrollHorizontally="true"
+				  android:background="@drawable/display_bg"
+				  android:paddingLeft="15dp"
+				  android:paddingRight="15dp"
+				  android:paddingTop="15dp"
+				  android:paddingBottom="18dp"
+				  android:layout_marginTop="50dp"
+				  android:layout_marginLeft="20dp"
+				  android:layout_marginRight="20dp"
+				  android:fontFamily="@font/digital7"/>
+
+		<TextView android:id="@+id/historyDisplay"
+				  android:layout_width="match_parent"
+				  android:layout_height="wrap_content"
+				  android:textSize="@dimen/history_text_size"
+				  android:singleLine="true"
+				  android:gravity="center|end"
+				  android:ellipsize="start"
+				  android:scrollHorizontally="true"
+				  android:background="@drawable/display_bg"
+				  android:padding="15dp"
+				  android:layout_marginTop="-4dp"
+				  android:layout_marginLeft="20dp"
+				  android:layout_marginRight="20dp"
+				  android:fontFamily="@font/digital7"/>
+	</LinearLayout>
 
 	<LinearLayout android:layout_width="wrap_content"
 				  android:layout_height="wrap_content"
@@ -40,7 +63,6 @@
 					  android:layout_height="0dp"
 					  android:layout_weight="1"
 					  android:layout_gravity="center_horizontal|bottom"
-					  android:background="@color/btn_gradient_orange_pressed"
 					  android:orientation="horizontal">
 
 			<ru.iamserj.calculator.SquareButton android:id="@+id/buttonClear"
@@ -84,7 +106,6 @@
 					  android:layout_height="0dp"
 					  android:layout_weight="1"
 					  android:layout_gravity="center_horizontal|bottom"
-					  android:background="@color/btn_gradient_orange_pressed"
 					  android:orientation="horizontal">
 
 			<ru.iamserj.calculator.SquareButton android:id="@+id/button7"
@@ -128,7 +149,6 @@
 					  android:layout_height="0dp"
 					  android:layout_weight="1"
 					  android:layout_gravity="center_horizontal|bottom"
-					  android:background="@color/btn_gradient_orange_pressed"
 					  android:orientation="horizontal">
 
 			<ru.iamserj.calculator.SquareButton android:id="@+id/button4"
@@ -172,7 +192,6 @@
 					  android:layout_height="0dp"
 					  android:layout_weight="1"
 					  android:layout_gravity="center_horizontal|bottom"
-					  android:background="@color/btn_gradient_orange_pressed"
 					  android:orientation="horizontal">
 
 			<ru.iamserj.calculator.SquareButton android:id="@+id/button1"
@@ -216,7 +235,6 @@
 					  android:layout_height="0dp"
 					  android:layout_weight="1"
 					  android:layout_gravity="center_horizontal|bottom"
-					  android:background="@color/btn_gradient_orange_pressed"
 					  android:orientation="horizontal">
 
 			<ru.iamserj.calculator.SquareButton android:id="@+id/button0"

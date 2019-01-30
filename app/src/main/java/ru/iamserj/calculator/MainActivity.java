@@ -17,12 +17,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import static android.webkit.ConsoleMessage.MessageLevel.LOG;
+
 public class MainActivity extends Activity implements OnClickListener {
 	
-	//public static final String SQUAREROOT = "√";
-	//public static final String SQUARED = "x²";
-	//public static final String INVERT = "1/x";
-	//public static final String TOGGLESIGN = "+/-";
+	private static final String TAG = "123456";
 	//DecimalFormat decimalFormat = new DecimalFormat("#.##########");
 	
 	private static final char CLEAR = 'C' ;
@@ -44,24 +43,24 @@ public class MainActivity extends Activity implements OnClickListener {
 	private boolean bracketWithSignAdded = false;
 	private boolean lastDigitIsNumeric = true;
 	
-	TextView textDisplay;
+	private TextView textDisplay, textHistory;
+	private String currentText;
 	
-	Button button0, button1, button2, button3, button4, button5, button6, button7, button8, button9;
-	Button buttonBackspace, buttonBrackets, buttonInvert, buttonClear, buttonDot, buttonEqual;
-	Button buttonAdd, buttonDivide, buttonMultiply, buttonSubtract;
+	private Button button0, button1, button2, button3, button4, button5, button6, button7, button8, button9;
+	private Button buttonBackspace, buttonBrackets, buttonInvert, buttonClear, buttonDot, buttonEqual;
+	private Button buttonAdd, buttonDivide, buttonMultiply, buttonSubtract;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// TODO: save data on hide/restart activity
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		//if (getSupportActionBar() != null) { getSupportActionBar().hide(); }
 		setContentView(R.layout.activity_main);
 		
-		textDisplay = findViewById(R.id.txtDisplay);
+		textDisplay = findViewById(R.id.resultDisplay);
 		// TODO: copy result to clipboard by tapping display
-		//textHistory = findViewById(R.id.txtHistory);
+		textHistory = findViewById(R.id.historyDisplay);
 		
 		button0 = findViewById(R.id.button0);
 		button1 = findViewById(R.id.button1);
@@ -108,7 +107,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	
 	@Override
 	public void onClick(View view) {
-		String currentText = textDisplay.getText().toString();
+		currentText = textDisplay.getText().toString();
+		currentText = currentText.replaceAll("\u00A0","");
 		if (resultIsEmpty) {
 			switch (view.getId()) {
 				//case R.id.button0:
@@ -236,7 +236,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				break;
 				
 			case R.id.buttonInvert:
-				// TODO: apply only to last number
+				// TODO: apply invert only to last number
 				if (resultIsNegative) {
 					setSpannedText(currentText.substring(1));
 				} else {
@@ -283,10 +283,8 @@ public class MainActivity extends Activity implements OnClickListener {
 				
 				break;
 				
-			// TODO: don't allow two oper signs in a row
-			// TODO: change color for operation buttons
 			// OPERATION BUTTONS
-			// TODO: ++++++++++++++++++++++++++++++
+			// + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 			case R.id.buttonAdd:
 				if (bracketOpened && currentText.endsWith("(")) break;
 				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
@@ -296,10 +294,10 @@ public class MainActivity extends Activity implements OnClickListener {
 					resultIsEmpty = false;
 				}
 				dotPresence = false;
-				setSpannedText(currentText + "+");
+				addOperationSign("+");
 				break;
 			
-			// TODO: ------------------------------
+			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			case R.id.buttonSubtract:
 				if (bracketOpened && currentText.endsWith("(")) break;
 				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
@@ -308,11 +306,10 @@ public class MainActivity extends Activity implements OnClickListener {
 					resultIsEmpty = false;
 				}
 				dotPresence = false;
-				setSpannedText(currentText + "-");
-				
+				addOperationSign("-");
 				break;
 				
-			// TODO: ******************************
+			// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 			case R.id.buttonMultiply:
 				if (bracketOpened && currentText.endsWith("(")) break;
 				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
@@ -321,10 +318,10 @@ public class MainActivity extends Activity implements OnClickListener {
 					resultIsEmpty = false;
 				}
 				dotPresence = false;
-				setSpannedText(currentText + "*");
+				addOperationSign("*");
 				break;
 				
-			// TODO: /////////////////////////////
+			// / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 			case R.id.buttonDivide:
 				if (bracketOpened && currentText.endsWith("(")) break;
 				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
@@ -333,11 +330,11 @@ public class MainActivity extends Activity implements OnClickListener {
 					resultIsEmpty = false;
 				}
 				dotPresence = false;
-				setSpannedText(currentText + "/");
+				addOperationSign("/");
 				break;
 				
 			
-			// TODO: ============================
+			// TODO: = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 			case R.id.buttonEqual:
 				lastDigitIsNumeric = false;
 				if (resultIsEmpty) break;
@@ -379,9 +376,24 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 	
+	
+	private void addOperationSign(String sign) {
+		char lastSymbol = currentText.charAt(currentText.length()-1);
+		
+		switch (lastSymbol) {
+			case '+':
+			case '-':
+			case '*':
+			case '/':
+				currentText = currentText.substring(0, currentText.length() - 1);
+				break;
+		}
+		setSpannedText(currentText + sign);
+	}
+	
 	private void setSpannedText(String str) {
 		textDisplay.setText("");
-		str = str.replaceAll("\u00A0","");
+		//str = str.replaceAll("\u00A0","");
 		int count = 0;
 		for(int i =0; i < str.length(); i++) {
 			switch (str.charAt(i)) {
@@ -414,3 +426,4 @@ public class MainActivity extends Activity implements OnClickListener {
 
 // TODO: lessen result font if viewport is small
 // TODO: landscape orientation
+// TODO: add history display logic
