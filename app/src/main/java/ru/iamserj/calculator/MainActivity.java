@@ -132,6 +132,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			case R.id.button0:
 				if (resultIsEmpty) break;
 				setSpannedText(currentText + "0");
+				// TODO: don't allow 2 zeros in a row if it is a start of non-float number
 				lastDigitIsNumeric = true;
 				break;
 			case R.id.button1:
@@ -170,6 +171,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				setSpannedText(currentText + "9");
 				lastDigitIsNumeric = true;
 				break;
+			// TODO: if (last is closed bracket) add *
 			// TODO: number length 10 digits maximum
 			// TODO: add little dots 1.000.000
 				
@@ -177,7 +179,6 @@ public class MainActivity extends Activity implements OnClickListener {
 			case R.id.buttonBackspace:
 				if (resultIsEmpty) break;
 				
-				// TODO: add lastDigitIsNumeric checker
 				if (currentText.length() == 1) {
 					resultIsEmpty = true;
 					currentText = getResources().getString(R.string.zero);                  // set 0
@@ -190,6 +191,9 @@ public class MainActivity extends Activity implements OnClickListener {
 					} else {
 						if (currentText.endsWith(".")) dotPresence = false;                 // remove dot
 						currentText = currentText.substring(0, currentText.length() - 1);   // just remove last digit
+						if (Character.isDigit(currentText.charAt(currentText.length()-1))) {
+							lastDigitIsNumeric = true;
+						}
 					}
 				}
 				setSpannedText(currentText);
@@ -267,6 +271,8 @@ public class MainActivity extends Activity implements OnClickListener {
 			// ..............................
 			case R.id.buttonDot:
 				
+				// TODO: check for dot presence in last number. E.g. after backspace use
+				
 				if (dotPresence) {
 					if (currentText.endsWith(".")) {
 						dotPresence = false;
@@ -339,6 +345,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				lastDigitIsNumeric = false;
 				if (resultIsEmpty) break;
 				
+				// TODO: trim zeros at the end of floating number
 				// num1 = Double.parseDouble(etNum1.getText().toString());
 				// num2 = Double.parseDouble(etNum2.getText().toString());
 				// valueOne = Double.parseDouble(String.valueOf(textDisplay.getText()));
@@ -406,7 +413,7 @@ public class MainActivity extends Activity implements OnClickListener {
 					textDisplay.append(spacing);
 					
 					Spannable coloredSign = new SpannableString(String.valueOf(str.charAt(i)));
-					coloredSign.setSpan(new ForegroundColorSpan(Color.BLUE), 0, coloredSign.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					coloredSign.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.display_operation_sign)), 0, coloredSign.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 					textDisplay.append(coloredSign);
 					
 					spacing.setSpan(new RelativeSizeSpan(0.5f), 0, spacing.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

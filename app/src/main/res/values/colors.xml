@@ -17,4 +17,5 @@
 
 	<color name="display_bg_color">#BDB27C</color>
 	<color name="display_bg_border_color">#2B2B2B</color>
+	<color name="display_operation_sign">#3F51B5</color>
 </resources>
