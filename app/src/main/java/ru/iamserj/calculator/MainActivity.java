@@ -2,6 +2,9 @@ package ru.iamserj.calculator;
 
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -59,7 +62,6 @@ public class MainActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_main);
 		
 		textDisplay = findViewById(R.id.resultDisplay);
-		// TODO: copy result to clipboard by tapping display
 		textHistory = findViewById(R.id.historyDisplay);
 		
 		button0 = findViewById(R.id.button0);
@@ -109,6 +111,11 @@ public class MainActivity extends Activity implements OnClickListener {
 	public void onClick(View view) {
 		currentText = textDisplay.getText().toString();
 		currentText = currentText.replaceAll("\u00A0","");
+		
+		ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+		ClipData clip = ClipData.newPlainText("MyCalc Copied Result", currentText);
+		clipboard.setPrimaryClip(clip);
+		
 		if (resultIsEmpty) {
 			switch (view.getId()) {
 				//case R.id.button0:
@@ -305,7 +312,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			
 			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 			case R.id.buttonSubtract:
-				if (bracketOpened && currentText.endsWith("(")) break;
+				//if (bracketOpened && currentText.endsWith("(")) break;
 				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
 				lastDigitIsNumeric = false;
 				if (resultIsEmpty) {
@@ -374,6 +381,9 @@ public class MainActivity extends Activity implements OnClickListener {
 		        }
 				*/
 				
+				double res = Calculate.evaluate(currentText);
+				currentText = String.valueOf(res);
+				setSpannedText(currentText);
 				break;
 				
 			
@@ -425,7 +435,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 		
 		
-		
+		// TODO: if result is very long, trim it to 8 digits
 		
 	}
 	
