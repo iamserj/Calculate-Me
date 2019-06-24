@@ -7,5 +7,5 @@
 	<dimen name="btn_clear_text_size">16sp</dimen>
 
 	<dimen name="result_text_size">50sp</dimen>
-	<dimen name="history_text_size">16sp</dimen>
+	<dimen name="history_text_size">18sp</dimen>
 </resources>

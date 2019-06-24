@@ -40,6 +40,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	
 	private boolean resultIsNegative = false;
 	private boolean resultIsEmpty = true;
+	private boolean finalResult = false;
 	private boolean clearedOnce = false;
 	private boolean dotPresence = false;
 	private boolean bracketOpened = false;
@@ -49,9 +50,14 @@ public class MainActivity extends Activity implements OnClickListener {
 	private TextView textDisplay, textHistory;
 	private String currentText;
 	
-	private Button button0, button1, button2, button3, button4, button5, button6, button7, button8, button9;
-	private Button buttonBackspace, buttonBrackets, buttonInvert, buttonClear, buttonDot, buttonEqual;
-	private Button buttonAdd, buttonDivide, buttonMultiply, buttonSubtract;
+	//private Button button0, button1, button2, button3, button4, button5, button6, button7, button8, button9;
+	//private Button buttonBackspace, buttonBrackets, buttonInvert, buttonClear, buttonDot, buttonEqual;
+	//private Button buttonAdd, buttonDivide, buttonMultiply, buttonSubtract;
+
+	// IDs of all the numeric buttons
+	private int[] numericButtons = {R.id.button0, R.id.button1, R.id.button2, R.id.button3, R.id.button4, R.id.button5, R.id.button6, R.id.button7, R.id.button8, R.id.button9};
+	// IDs of all the operator buttons
+	private int[] operatorButtons = {R.id.buttonAdd, R.id.buttonBackspace, R.id.buttonBrackets, R.id.buttonInvert, R.id.buttonClear, R.id.buttonDivide, R.id.buttonDot, R.id.buttonEqual, R.id.buttonMultiply, R.id.buttonSubtract};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +70,16 @@ public class MainActivity extends Activity implements OnClickListener {
 		textDisplay = findViewById(R.id.resultDisplay);
 		textHistory = findViewById(R.id.historyDisplay);
 		
-		button0 = findViewById(R.id.button0);
+		textDisplay.setOnClickListener(this);
+
+		for (int id : numericButtons) {
+			findViewById(id).setOnClickListener(this);
+		}
+		for (int id : operatorButtons) {
+			findViewById(id).setOnClickListener(this);
+		}
+		
+		/*button0 = findViewById(R.id.button0);
 		button1 = findViewById(R.id.button1);
 		button2 = findViewById(R.id.button2);
 		button3 = findViewById(R.id.button3);
@@ -104,7 +119,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		buttonDot.setOnClickListener(this);
 		buttonEqual.setOnClickListener(this);
 		buttonMultiply.setOnClickListener(this);
-		buttonSubtract.setOnClickListener(this);
+		buttonSubtract.setOnClickListener(this);*/
 	}
 	
 	@Override
@@ -112,9 +127,20 @@ public class MainActivity extends Activity implements OnClickListener {
 		currentText = textDisplay.getText().toString();
 		currentText = currentText.replaceAll("\u00A0","");
 		
-		ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-		ClipData clip = ClipData.newPlainText("MyCalc Copied Result", currentText);
-		clipboard.setPrimaryClip(clip);
+		if (view.getId() == R.id.resultDisplay) {
+			ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+			ClipData clip = ClipData.newPlainText("MyCalc Copied Result", currentText);
+			clipboard.setPrimaryClip(clip);
+			Toast.makeText(this, "Result copied", Toast.LENGTH_SHORT).show();
+			return;
+		} else {
+			if (finalResult) {
+				finalResult = false;
+				textHistory.setText(currentText);
+				resultIsEmpty = true;
+				currentText = "0";
+			}
+		}
 		
 		if (resultIsEmpty) {
 			switch (view.getId()) {
@@ -129,7 +155,6 @@ public class MainActivity extends Activity implements OnClickListener {
 				case R.id.button8:
 				case R.id.button9:
 					resultIsEmpty = false;
-					//textDisplay.setText("");
 					currentText = "";
 					break;
 			}
@@ -279,7 +304,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			case R.id.buttonDot:
 				
 				// TODO: check for dot presence in last number. E.g. after backspace use
-				
+				// TODO: allow dot after operational sign. 5+. -> 5+0.
 				if (dotPresence) {
 					if (currentText.endsWith(".")) {
 						dotPresence = false;
@@ -365,22 +390,23 @@ public class MainActivity extends Activity implements OnClickListener {
 				}
 				
 				if(!Double.isNaN(valueOne)) {
-		            valueTwo = Double.parseDouble(binding.editText.getText().toString());
-		            binding.editText.setText(null);
+					valueTwo = Double.parseDouble(binding.editText.getText().toString());
+					binding.editText.setText(null);
 		
-		            if(CURRENT_ACTION == ADDITION) valueOne = this.valueOne + valueTwo;
-		            else if(CURRENT_ACTION == SUBTRACTION) valueOne = this.valueOne - valueTwo;
-		            else if(CURRENT_ACTION == MULTIPLICATION) valueOne = this.valueOne * valueTwo;
-		            else if(CURRENT_ACTION == DIVISION) valueOne = this.valueOne / valueTwo;
-		        }
-		        else {
-		            try {
-		                valueOne = Double.parseDouble(binding.editText.getText().toString());
-		            }
-		            catch (Exception e){}
-		        }
+					if(CURRENT_ACTION == ADDITION) valueOne = this.valueOne + valueTwo;
+					else if(CURRENT_ACTION == SUBTRACTION) valueOne = this.valueOne - valueTwo;
+					else if(CURRENT_ACTION == MULTIPLICATION) valueOne = this.valueOne * valueTwo;
+					else if(CURRENT_ACTION == DIVISION) valueOne = this.valueOne / valueTwo;
+				}
+				else {
+					try {
+						valueOne = Double.parseDouble(binding.editText.getText().toString());
+					}
+					catch (Exception e){}
+				}
 				*/
-				
+				// TODO: don't allow any enter to result
+				finalResult = true;
 				double res = Calculate.evaluate(currentText);
 				currentText = String.valueOf(res);
 				setSpannedText(currentText);
@@ -436,7 +462,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		
 		
 		// TODO: if result is very long, trim it to 8 digits
-		
+		// TODO: cut .0
 	}
 	
 }
