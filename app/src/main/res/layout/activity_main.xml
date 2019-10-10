@@ -109,31 +109,16 @@
 					  android:orientation="horizontal">
 
 			<ru.iamserj.calculator.SquareButton android:id="@+id/button7"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_height="match_parent"
-					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_blue"
 					android:text="@string/seven"
-					android:textSize="@dimen/btn_text_size"/>
+					style="@style/Button.Numeric"/>
 
 			<ru.iamserj.calculator.SquareButton android:id="@+id/button8"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_height="match_parent"
-					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_blue"
 					android:text="@string/eight"
-					android:textSize="@dimen/btn_text_size"/>
+					style="@style/Button.Numeric"/>
 
 			<ru.iamserj.calculator.SquareButton android:id="@+id/button9"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_height="match_parent"
-					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_blue"
 					android:text="@string/nine"
-					android:textSize="@dimen/btn_text_size"/>
+					style="@style/Button.Numeric"/>
 
 			<ru.iamserj.calculator.SquareButton android:id="@+id/buttonMultiply"
 					android:layout_width="0dp"
@@ -158,7 +143,8 @@
 					android:layout_margin="@dimen/btn_between_margins"
 					android:background="@drawable/bt_gradient_rounded_blue"
 					android:text="@string/four"
-					android:textSize="@dimen/btn_text_size"/>
+					android:textSize="@dimen/btn_text_size"
+					android:fontFamily="@font/digital7"/>
 
 			<ru.iamserj.calculator.SquareButton android:id="@+id/button5"
 					android:layout_width="0dp"
@@ -167,7 +153,8 @@
 					android:layout_margin="@dimen/btn_between_margins"
 					android:background="@drawable/bt_gradient_rounded_blue"
 					android:text="@string/five"
-					android:textSize="@dimen/btn_text_size"/>
+					android:textSize="@dimen/btn_text_size"
+					android:fontFamily="@font/digital7"/>
 
 			<ru.iamserj.calculator.SquareButton android:id="@+id/button6"
 					android:layout_width="0dp"
@@ -176,7 +163,8 @@
 					android:layout_margin="@dimen/btn_between_margins"
 					android:background="@drawable/bt_gradient_rounded_blue"
 					android:text="@string/six"
-					android:textSize="@dimen/btn_text_size"/>
+					android:textSize="@dimen/btn_text_size"
+					android:fontFamily="@font/digital7"/>
 
 			<ru.iamserj.calculator.SquareButton android:id="@+id/buttonSubtract"
 					android:layout_width="0dp"
@@ -201,7 +189,8 @@
 					android:layout_margin="@dimen/btn_between_margins"
 					android:background="@drawable/bt_gradient_rounded_blue"
 					android:text="@string/one"
-					android:textSize="@dimen/btn_text_size"/>
+					android:textSize="@dimen/btn_text_size"
+					android:fontFamily="@font/digital7"/>
 
 			<ru.iamserj.calculator.SquareButton android:id="@+id/button2"
 					android:layout_width="0dp"
@@ -210,7 +199,8 @@
 					android:layout_margin="@dimen/btn_between_margins"
 					android:background="@drawable/bt_gradient_rounded_blue"
 					android:text="@string/two"
-					android:textSize="@dimen/btn_text_size"/>
+					android:textSize="@dimen/btn_text_size"
+					android:fontFamily="@font/digital7"/>
 
 			<ru.iamserj.calculator.SquareButton android:id="@+id/button3"
 					android:layout_width="0dp"
@@ -219,7 +209,8 @@
 					android:layout_margin="@dimen/btn_between_margins"
 					android:background="@drawable/bt_gradient_rounded_blue"
 					android:text="@string/three"
-					android:textSize="@dimen/btn_text_size"/>
+					android:textSize="@dimen/btn_text_size"
+					android:fontFamily="@font/digital7"/>
 
 			<ru.iamserj.calculator.SquareButton android:id="@+id/buttonAdd"
 					android:layout_width="0dp"
@@ -244,7 +235,8 @@
 					android:layout_margin="@dimen/btn_between_margins"
 					android:background="@drawable/bt_gradient_rounded_blue"
 					android:text="@string/zero"
-					android:textSize="@dimen/btn_text_size"/>
+					android:textSize="@dimen/btn_text_size"
+					android:fontFamily="@font/digital7"/>
 
 			<ru.iamserj.calculator.SquareButton android:id="@+id/buttonDot"
 					android:layout_width="0dp"

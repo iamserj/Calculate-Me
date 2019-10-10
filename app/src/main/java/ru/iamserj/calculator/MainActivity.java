@@ -15,6 +15,7 @@ import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 
+//public class MainActivity extends Activity implements OnClickListener, OnTouchListener {
 public class MainActivity extends Activity implements OnClickListener {
 	
 	private static final String TAG = "123456";
@@ -74,53 +76,33 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		for (int id : numericButtons) {
 			findViewById(id).setOnClickListener(this);
+			//findViewById(id).setOnTouchListener(handleTouch);
 		}
 		for (int id : operatorButtons) {
 			findViewById(id).setOnClickListener(this);
+			//findViewById(id).setOnTouchListener(handleTouch);
 		}
 		
-		/*button0 = findViewById(R.id.button0);
-		button1 = findViewById(R.id.button1);
-		button2 = findViewById(R.id.button2);
-		button3 = findViewById(R.id.button3);
-		button4 = findViewById(R.id.button4);
-		button5 = findViewById(R.id.button5);
-		button6 = findViewById(R.id.button6);
-		button7 = findViewById(R.id.button7);
-		button8 = findViewById(R.id.button8);
-		button9 = findViewById(R.id.button9);
-		buttonAdd       = findViewById(R.id.buttonAdd);
-		buttonBackspace = findViewById(R.id.buttonBackspace);
-		buttonBrackets = findViewById(R.id.buttonBrackets);
-		buttonInvert  = findViewById(R.id.buttonInvert);
-		buttonClear     = findViewById(R.id.buttonClear);
-		buttonDivide    = findViewById(R.id.buttonDivide);
-		buttonDot       = findViewById(R.id.buttonDot);
-		buttonEqual     = findViewById(R.id.buttonEqual);
-		buttonMultiply  = findViewById(R.id.buttonMultiply);
-		buttonSubtract  = findViewById(R.id.buttonSubtract);
-		
-		button0.setOnClickListener(this);
-		button1.setOnClickListener(this);
-		button2.setOnClickListener(this);
-		button3.setOnClickListener(this);
-		button4.setOnClickListener(this);
-		button5.setOnClickListener(this);
-		button6.setOnClickListener(this);
-		button7.setOnClickListener(this);
-		button8.setOnClickListener(this);
-		button9.setOnClickListener(this);
-		buttonAdd.setOnClickListener(this);
-		buttonBackspace.setOnClickListener(this);
-		buttonBrackets.setOnClickListener(this);
-		buttonInvert.setOnClickListener(this);
-		buttonClear.setOnClickListener(this);
-		buttonDivide.setOnClickListener(this);
-		buttonDot.setOnClickListener(this);
-		buttonEqual.setOnClickListener(this);
-		buttonMultiply.setOnClickListener(this);
-		buttonSubtract.setOnClickListener(this);*/
 	}
+
+	// TODO: add touch animation
+	/*@Override
+	public boolean onTouch(View view, MotionEvent motionEvent) {
+		int action = motionEvent.getAction();
+		
+		if (action == MotionEvent.ACTION_DOWN) {
+			view.animate().scaleXBy(100f).setDuration(5000).start();
+			view.animate().scaleYBy(100f).setDuration(5000).start();
+			return true;
+		} else if (action == MotionEvent.ACTION_UP) {
+			view.animate().cancel();
+			view.animate().scaleX(1f).setDuration(1000).start();
+			view.animate().scaleY(1f).setDuration(1000).start();
+			return true;
+		}
+
+		return false;
+	}*/
 	
 	@Override
 	public void onClick(View view) {
@@ -159,12 +141,15 @@ public class MainActivity extends Activity implements OnClickListener {
 					break;
 			}
 		}
+
 		switch (view.getId()) {
 			
 			case R.id.button0:
 				if (resultIsEmpty) break;
 				setSpannedText(currentText + "0");
-				// TODO: don't allow 2 zeros in a row if it is a start of non-float number
+				// TODO: don't allow 2 zeros in a row if it is:
+				// --- a start of non-float number
+				// --- 05 -> 5
 				lastDigitIsNumeric = true;
 				break;
 			case R.id.button1:
@@ -203,16 +188,20 @@ public class MainActivity extends Activity implements OnClickListener {
 				setSpannedText(currentText + "9");
 				lastDigitIsNumeric = true;
 				break;
-			// TODO: if (last is closed bracket) add *
+			// TODO: if (last is closed bracket) add *: (5*8)9 -> (5*8) * 9
 			// TODO: number length 10 digits maximum
-			// TODO: add little dots 1.000.000
-				
+			// TODO: add little colons 1,000,000
+			
+
 			// UTILS BUTTONS
+			// <-  <-  <-  <-  <-  <-  <-  <-  <-  <-  <-  <-  <-  <-  <-  <-  <-
 			case R.id.buttonBackspace:
 				if (resultIsEmpty) break;
 				
 				if (currentText.length() == 1) {
 					resultIsEmpty = true;
+					bracketOpened = false;
+					dotPresence = false;
 					currentText = getResources().getString(R.string.zero);                  // set 0
 				} else if (currentText.length() > 1) {
 					//String negativeSymbol = getResources().getString(R.string.sub);       // subtraction sign
@@ -222,6 +211,8 @@ public class MainActivity extends Activity implements OnClickListener {
 						currentText = getResources().getString(R.string.zero);              // set 0
 					} else {
 						if (currentText.endsWith(".")) dotPresence = false;                 // remove dot
+						if (currentText.endsWith("(")) bracketOpened = false;               // remove open bracket
+						if (currentText.endsWith(")")) bracketOpened = true;                // remove close bracket
 						currentText = currentText.substring(0, currentText.length() - 1);   // just remove last digit
 						if (Character.isDigit(currentText.charAt(currentText.length()-1))) {
 							lastDigitIsNumeric = true;
@@ -231,8 +222,8 @@ public class MainActivity extends Activity implements OnClickListener {
 				setSpannedText(currentText);
 				break;
 				
+			// ( )  ( )  ( )  ( )  ( )  ( )  ( )  ( )  ( )  ( )  ( )  ( )  ( )  ( )
 			case R.id.buttonBrackets:
-				
 				if (resultIsEmpty) {
 					resultIsEmpty = false;
 					setSpannedText("(");
@@ -268,11 +259,13 @@ public class MainActivity extends Activity implements OnClickListener {
 					}
 				}
 				bracketOpened = !bracketOpened;
-				Log.d("---------", bracketOpened+"");
-				break;
+				//Log.d("---------", bracketOpened+"");
 				
+				break;
+			
+			// +-  	+-  +-  +-  +-  +-  +-  +-  +-  +-  +-  +-  +-  +-  +-  +-  +-
 			case R.id.buttonInvert:
-				// TODO: apply invert only to last number
+				// TODO: apply invert only to last number in expression
 				if (resultIsNegative) {
 					setSpannedText(currentText.substring(1));
 				} else {
@@ -280,10 +273,12 @@ public class MainActivity extends Activity implements OnClickListener {
 				}
 				resultIsNegative = !resultIsNegative;
 				break;
-				
+			
+			// CLEAR  CLEAR  CLEAR  CLEAR  CLEAR  CLEAR  CLEAR  CLEAR  CLEAR  CLEAR
 			case R.id.buttonClear:
 				lastDigitIsNumeric = false;
 				
+				// TODO: clean conditions
 				if (!clearedOnce) {
 					clearedOnce = true;
 					resultIsEmpty = true;
@@ -296,15 +291,15 @@ public class MainActivity extends Activity implements OnClickListener {
 					dotPresence = false;
 					resultIsNegative = false;
 					textDisplay.setText(getResources().getString(R.string.zero));
-					//textHistory.setText("");
+					textHistory.setText("");
 				}
 				break;
 				
-			// ..............................
+			// .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
 			case R.id.buttonDot:
 				
 				// TODO: check for dot presence in last number. E.g. after backspace use
-				// TODO: allow dot after operational sign. 5+. -> 5+0.
+				// TODO: dot (0.5) doesnt work as first number
 				if (dotPresence) {
 					if (currentText.endsWith(".")) {
 						dotPresence = false;
@@ -312,17 +307,19 @@ public class MainActivity extends Activity implements OnClickListener {
 						setSpannedText(currentText);
 					}
 				} else {
+					dotPresence = true;
+					resultIsEmpty = false;
 					if (lastDigitIsNumeric) {
-						dotPresence = true;
 						setSpannedText(currentText + ".");
-						resultIsEmpty = false;
+					} else {
+						setSpannedText(currentText + "0.");		// TODO: allow dot after operational sign. 5+. -> 5+0.
 					}
 				}
 				
 				break;
 				
 			// OPERATION BUTTONS
-			// + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
+			// +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +
 			case R.id.buttonAdd:
 				if (bracketOpened && currentText.endsWith("(")) break;
 				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
@@ -335,7 +332,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				addOperationSign("+");
 				break;
 			
-			// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+			// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 			case R.id.buttonSubtract:
 				//if (bracketOpened && currentText.endsWith("(")) break;
 				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
@@ -347,7 +344,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				addOperationSign("-");
 				break;
 				
-			// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+			// *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 			case R.id.buttonMultiply:
 				if (bracketOpened && currentText.endsWith("(")) break;
 				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
@@ -359,7 +356,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				addOperationSign("*");
 				break;
 				
-			// / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+			// /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /
 			case R.id.buttonDivide:
 				if (bracketOpened && currentText.endsWith("(")) break;
 				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
@@ -372,7 +369,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				break;
 				
 			
-			// TODO: = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+			// =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =
 			case R.id.buttonEqual:
 				lastDigitIsNumeric = false;
 				if (resultIsEmpty) break;
@@ -405,14 +402,20 @@ public class MainActivity extends Activity implements OnClickListener {
 					catch (Exception e){}
 				}
 				*/
-				// TODO: don't allow any enter to result
+				// TODO: don't allow any enter to result?
+				// TODO: if tap operationals after final result, count with final result
+
 				finalResult = true;
+
+				textHistory.setText(currentText);
+
 				double res = Calculate.evaluate(currentText);
-				currentText = String.valueOf(res);
-				setSpannedText(currentText);
+
+				String resFormatted = formatResult(res);    // cut .0 in 50.0
+				
+				setSpannedText(resFormatted);
 				break;
 				
-			
 			
 			default:
 				Toast.makeText(this, "wtf?", Toast.LENGTH_LONG).show();
@@ -461,12 +464,46 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 		
 		
-		// TODO: if result is very long, trim it to 8 digits
-		// TODO: cut .0
+		// TODO: if result is very long, trim it to 8-10-12 digits + E
+		
+	}
+
+	private String formatResult (double result) {
+		
+		// cut zero from integer
+		
+		// Method 02
+        // s = (result % 1.0 != 0) ? String.format("%s", result) : String.format("%.0f", result);
+        // 134 931 591
+        // 141 341 499
+        // 238 986 209
+        
+		// Method 03 - THE FASTEST
+		int j = (int) result;
+        return (result == j) ? String.valueOf(j) : String.valueOf(result);
+		// 23 088 955
+		// 27 258 791
+		// 36 525 963
+		
+		// 4
+		// s = (result == Math.floor(result)) ? String.format("%.0f", result) : Double.toString(result);
+		// 118 484 929
+		// 204 593 829
+		// 261 309 863
+
+		// long startTime, estimatedTime;
+		// startTime = System.nanoTime();
+		// for (int i = 0; i < 1000; i++) {}
+		// estimatedTime = System.nanoTime() - startTime;
+
+		// add apostrophe
 	}
 	
 }
 
 // TODO: lessen result font if viewport is small
 // TODO: landscape orientation
-// TODO: add history display logic
+// TODO: move utils function to UTILS class
+// TODO: Calculate.java: if expression ends with '/' falls
+
+// TODO: LAYOUT: move common buttons style to styles.xml Button.Numeric
