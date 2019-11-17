@@ -42,12 +42,13 @@ public class MainActivity extends Activity implements OnClickListener {
 	
 	private boolean resultIsNegative = false;
 	private boolean resultIsEmpty = true;
-	private boolean finalResult = false;
+	//private boolean finalResult = false;
 	private boolean clearedOnce = false;
 	private boolean dotPresence = false;
 	private boolean bracketOpened = false;
 	private boolean bracketWithSignAdded = false;
 	private boolean lastDigitIsNumeric = true;
+	private boolean zeroWasAdded = false;
 	
 	private TextView textDisplay, textHistory;
 	private String currentText;
@@ -58,6 +59,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	// IDs of all the numeric buttons
 	private int[] numericButtons = {R.id.button0, R.id.button1, R.id.button2, R.id.button3, R.id.button4, R.id.button5, R.id.button6, R.id.button7, R.id.button8, R.id.button9};
+	
 	// IDs of all the operator buttons
 	private int[] operatorButtons = {R.id.buttonAdd, R.id.buttonBackspace, R.id.buttonBrackets, R.id.buttonInvert, R.id.buttonClear, R.id.buttonDivide, R.id.buttonDot, R.id.buttonEqual, R.id.buttonMultiply, R.id.buttonSubtract};
 	
@@ -116,12 +118,12 @@ public class MainActivity extends Activity implements OnClickListener {
 			Toast.makeText(this, "Result copied", Toast.LENGTH_SHORT).show();
 			return;
 		} else {
-			if (finalResult) {
+			/*if (finalResult) {				// TODO: what is it, finalResult?
 				finalResult = false;
 				textHistory.setText(currentText);
 				resultIsEmpty = true;
 				currentText = "0";
-			}
+			}*/
 		}
 		
 		if (resultIsEmpty) {
@@ -141,15 +143,17 @@ public class MainActivity extends Activity implements OnClickListener {
 					break;
 			}
 		}
+		
+		if (view.getId() != R.id.buttonDot) {
+			zeroWasAdded = false;
+		}
 
 		switch (view.getId()) {
 			
 			case R.id.button0:
 				if (resultIsEmpty) break;
 				setSpannedText(currentText + "0");
-				// TODO: don't allow 2 zeros in a row if it is:
-				// --- a start of non-float number
-				// --- 05 -> 5
+				// TODO: don't allow 2 zeros in a row if it is a start of non-float number 0005 -> 5
 				lastDigitIsNumeric = true;
 				break;
 			case R.id.button1:
@@ -237,7 +241,7 @@ public class MainActivity extends Activity implements OnClickListener {
 						currentText = currentText.substring(0, currentText.length() - cutEnd);
 						if (currentText.length() == 0) {
 							resultIsEmpty = true;
-							textDisplay.setText("0");
+							textDisplay.setText(getResources().getString(R.string.zero));
 						} else {
 							setSpannedText(currentText);
 						}
@@ -299,23 +303,28 @@ public class MainActivity extends Activity implements OnClickListener {
 			case R.id.buttonDot:
 				
 				// TODO: check for dot presence in last number. E.g. after backspace use
-				// TODO: dot (0.5) doesnt work as first number
 				if (dotPresence) {
 					if (currentText.endsWith(".")) {
 						dotPresence = false;
-						currentText = currentText.substring(0, currentText.length() - 1);
+						int cutChars = zeroWasAdded ? 2 : 1;
+						currentText = currentText.substring(0, currentText.length() - cutChars);
+						zeroWasAdded = false;
 						setSpannedText(currentText);
+						if (currentText.equals("0")) {
+							resultIsEmpty = true;
+						}
 					}
 				} else {
 					dotPresence = true;
-					resultIsEmpty = false;
-					if (lastDigitIsNumeric) {
+					if (lastDigitIsNumeric || resultIsEmpty) {
 						setSpannedText(currentText + ".");
 					} else {
-						setSpannedText(currentText + "0.");		// TODO: allow dot after operational sign. 5+. -> 5+0.
+						zeroWasAdded = true;
+						setSpannedText(currentText + "0.");		// allows dot after operational sign. 5+. -> 5+0.
 					}
+					resultIsEmpty = false;
 				}
-				
+				// TODO: don't allow dot after result is given
 				break;
 				
 			// OPERATION BUTTONS
@@ -371,51 +380,33 @@ public class MainActivity extends Activity implements OnClickListener {
 			
 			// =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =
 			case R.id.buttonEqual:
-				lastDigitIsNumeric = false;
 				if (resultIsEmpty) break;
 				
-				// TODO: trim zeros at the end of floating number
-				// num1 = Double.parseDouble(etNum1.getText().toString());
-				// num2 = Double.parseDouble(etNum2.getText().toString());
-				// valueOne = Double.parseDouble(String.valueOf(textDisplay.getText()));
-				
-				/*if (Double.isNaN(valueOne)){
-					valueOne = Double.parseDouble(String.valueOf(textDisplay.getText()));
-				} else {
-					valueTwo = Double.parseDouble(textDisplay.getText().toString());
-					valueOne = valueOne + valueTwo;
-				}
-				
-				if(!Double.isNaN(valueOne)) {
-					valueTwo = Double.parseDouble(binding.editText.getText().toString());
-					binding.editText.setText(null);
-		
-					if(CURRENT_ACTION == ADDITION) valueOne = this.valueOne + valueTwo;
-					else if(CURRENT_ACTION == SUBTRACTION) valueOne = this.valueOne - valueTwo;
-					else if(CURRENT_ACTION == MULTIPLICATION) valueOne = this.valueOne * valueTwo;
-					else if(CURRENT_ACTION == DIVISION) valueOne = this.valueOne / valueTwo;
-				}
-				else {
-					try {
-						valueOne = Double.parseDouble(binding.editText.getText().toString());
+				lastDigitIsNumeric = false;
+				// TODO: if tap operationals after final result, count with final result, set booleans lastDigitIsNumeric, dotPresence, resultIsNegative
+				// TODO: if tap numerics after final result, clean and start new expression
+				dotPresence = false;
+				resultIsNegative = false;
+				//finalResult = true;
+
+				if (bracketOpened) {
+					int lastIndex = currentText.lastIndexOf("(");
+        			if (lastIndex != -1) {
+						String beginString = currentText.substring(0, lastIndex);
+						String endString = currentText.substring(lastIndex + 1);
+						currentText = beginString + endString;
 					}
-					catch (Exception e){}
 				}
-				*/
-				// TODO: don't allow any enter to result?
-				// TODO: if tap operationals after final result, count with final result
-
-				finalResult = true;
-
-				textHistory.setText(currentText);
-
-				double res = Calculate.evaluate(currentText);
-
-				String resFormatted = formatResult(res);    // cut .0 in 50.0
+				currentText = trimMathSignEnding(currentText);		// trim [+ - * /] endings
+				double result = Calculate.evaluate(currentText);	// evaluate expression
+				String resFormatted = cutFloatIfInteger(result);    // cut floating zero from integer
 				
+				// save real result
+				// cut showable result
+
 				setSpannedText(resFormatted);
+				textHistory.setText(currentText);
 				break;
-				
 			
 			default:
 				Toast.makeText(this, "wtf?", Toast.LENGTH_LONG).show();
@@ -441,7 +432,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		textDisplay.setText("");
 		//str = str.replaceAll("\u00A0","");
 		int count = 0;
-		for(int i =0; i < str.length(); i++) {
+		for (int i = 0; i < str.length(); i++) {
 			switch (str.charAt(i)) {
 				case '+':
 				case '-':
@@ -463,47 +454,96 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 		}
 		
+		// TODO:
+		// if result is very long, trim it to less digits + E
+		// if entered number is very long, don't allow to enter (if trying to enter new number, return operation)
+
+		// On entry set max digits = 10 symb
+
+
+		// If you just want to use AWT, then use Graphics.getFontMetrics (optionally specifying the font, for a non-default one) to get a FontMetrics
+		// then FontMetrics.stringWidth to find the width for the specified string.
+
+		// 1) get currentText width
+/*		Graphics g;
+		String s = textDisplay.getText().toString();
+		int textWidth = g.getFontMetrics().stringWidth(s);
 		
-		// TODO: if result is very long, trim it to 8-10-12 digits + E
+		int textDisplayWidth;
+
+		// 2) get result view width
+		LinearLayout layout = (LinearLayout)findViewById(R.id.YOUD VIEW ID);
+		ViewTreeObserver vto = layout.getViewTreeObserver(); 
+		//if (viewTreeObserver.isAlive()) {
+		vto.addOnGlobalLayoutListener(new OnGlobalLayoutListener() { 
+		//vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+			@Override 
+			public void onGlobalLayout() { 
+				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+					this.layout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+				} else {
+					this.layout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+				}
+				// textDisplayWidth = layout.getWidth();
+				textDisplayWidth = layout.getMeasuredWidth();
+			}
+		});
+		//}
+*/
+
+		/*
 		
+		yourView.postDelayed(new Runnable() {               
+			@Override
+			public void run() {         
+				yourView.invalidate();
+				System.out.println("Width = " + yourView.getWidth());               
+			}
+		}, 1);
+
+		*/
+
+		
+	/*	if (textWidth > textDisplayWidth) {				// text doesn't fit
+			//			a) align text to left side
+			//			b) cut tail
+
+		} else {
+			//			a) align text to right side
+			//			b) block exceed user entry
+			
+		}
+		
+	*/
+	}
+	
+	
+
+	private String cutFloatIfInteger(double result) {
+		// cut floating zero from integer
+		int j = (int) result;
+		return (result == j) ? String.valueOf(j) : String.valueOf(result);
+		
+
 	}
 
-	private String formatResult (double result) {
-		
-		// cut zero from integer
-		
-		// Method 02
-        // s = (result % 1.0 != 0) ? String.format("%s", result) : String.format("%.0f", result);
-        // 134 931 591
-        // 141 341 499
-        // 238 986 209
-        
-		// Method 03 - THE FASTEST
-		int j = (int) result;
-        return (result == j) ? String.valueOf(j) : String.valueOf(result);
-		// 23 088 955
-		// 27 258 791
-		// 36 525 963
-		
-		// 4
-		// s = (result == Math.floor(result)) ? String.format("%.0f", result) : Double.toString(result);
-		// 118 484 929
-		// 204 593 829
-		// 261 309 863
-
-		// long startTime, estimatedTime;
-		// startTime = System.nanoTime();
-		// for (int i = 0; i < 1000; i++) {}
-		// estimatedTime = System.nanoTime() - startTime;
-
-		// add apostrophe
+	private String trimMathSignEnding(String str) {
+		switch (str.charAt(str.length() - 1)) {
+			case '+':
+			case '-':
+			case '*':
+			case '/':
+				str = str.substring(0, str.length() - 1);
+				break;
+		}
+		return str;
 	}
 	
 }
 
-// TODO: lessen result font if viewport is small
-// TODO: landscape orientation
+// TODO: move common buttons style to styles.xml Button.Numeric + other buttons
+// TODO: add apostrophes
+// TODO: lighten bg color or make all dark, lighten buttons color, bigger button numbers font size. Bigger display font size
 // TODO: move utils function to UTILS class
-// TODO: Calculate.java: if expression ends with '/' falls
-
-// TODO: LAYOUT: move common buttons style to styles.xml Button.Numeric
+// TODO: lessen result font if viewport is small?
+// TODO: refactor all

@@ -13,258 +13,243 @@
 			   android:background="@drawable/background_round_rect"
 			   android:layout_margin="5dp"/>
 
-	<LinearLayout android:layout_width="match_parent"
-				  android:layout_height="wrap_content"
-				  android:orientation="vertical">
+	<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:gravity="bottom"
+			android:orientation="vertical">
 
-		<TextView android:id="@+id/resultDisplay"
-				  android:layout_width="match_parent"
-				  android:layout_height="wrap_content"
-				  android:textSize="@dimen/result_text_size"
-				  android:singleLine="true"
-				  android:gravity="center|end"
-				  android:text="@string/zero"
-				  android:ellipsize="start"
-				  android:scrollHorizontally="true"
-				  android:background="@drawable/display_bg"
-				  android:paddingLeft="15dp"
-				  android:paddingRight="15dp"
-				  android:paddingTop="15dp"
-				  android:paddingBottom="18dp"
-				  android:layout_marginTop="50dp"
-				  android:layout_marginLeft="20dp"
-				  android:layout_marginRight="20dp"
-				  android:fontFamily="@font/digital7"/>
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical">
 
-		<TextView android:id="@+id/historyDisplay"
-				  android:layout_width="match_parent"
-				  android:layout_height="wrap_content"
-				  android:textSize="@dimen/history_text_size"
-				  android:singleLine="true"
-				  android:gravity="center|end"
-				  android:ellipsize="start"
-				  android:scrollHorizontally="true"
-				  android:background="@drawable/display_bg"
-				  android:padding="15dp"
-				  android:layout_marginTop="-4dp"
-				  android:layout_marginLeft="20dp"
-				  android:layout_marginRight="20dp"
-				  android:fontFamily="@font/digital7"/>
-	</LinearLayout>
-
-	<LinearLayout android:layout_width="wrap_content"
-				  android:layout_height="wrap_content"
-				  android:layout_margin="5dp"
-				  android:padding="16dp"
-				  android:orientation="vertical"
-				  android:layout_gravity="center_horizontal|bottom">
-
-		<LinearLayout android:layout_width="wrap_content"
-					  android:layout_height="0dp"
-					  android:layout_weight="1"
-					  android:layout_gravity="center_horizontal|bottom"
-					  android:orientation="horizontal">
-
-			<ru.iamserj.calculator.SquareButton android:id="@+id/buttonClear"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_height="match_parent"
-					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_green"
-					android:text="@string/clear"
-					android:textSize="@dimen/btn_clear_text_size"/>
-
-			<ru.iamserj.calculator.SquareButton android:id="@+id/buttonBrackets"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_height="match_parent"
-					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_green"
-					android:text="@string/brackets"
-					android:textSize="@dimen/btn_text_size"/>
-
-			<ru.iamserj.calculator.SquareButton android:id="@+id/buttonInvert"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_height="match_parent"
-					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_green"
-					android:text="@string/invert"
-					android:textSize="@dimen/btn_text_size"/>
-
-			<ru.iamserj.calculator.SquareButton android:id="@+id/buttonDivide"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_height="match_parent"
-					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_green"
-					android:text="@string/div"
-					android:textSize="@dimen/btn_text_size"/>
-		</LinearLayout>
-
-		<LinearLayout android:layout_width="wrap_content"
-					  android:layout_height="0dp"
-					  android:layout_weight="1"
-					  android:layout_gravity="center_horizontal|bottom"
-					  android:orientation="horizontal">
-
-			<ru.iamserj.calculator.SquareButton android:id="@+id/button7"
-					android:text="@string/seven"
-					style="@style/Button.Numeric"/>
-
-			<ru.iamserj.calculator.SquareButton android:id="@+id/button8"
-					android:text="@string/eight"
-					style="@style/Button.Numeric"/>
-
-			<ru.iamserj.calculator.SquareButton android:id="@+id/button9"
-					android:text="@string/nine"
-					style="@style/Button.Numeric"/>
-
-			<ru.iamserj.calculator.SquareButton android:id="@+id/buttonMultiply"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_height="match_parent"
-					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_green"
-					android:text="@string/mul"
-					android:textSize="@dimen/btn_text_size"/>
-		</LinearLayout>
-
-		<LinearLayout android:layout_width="wrap_content"
-					  android:layout_height="0dp"
-					  android:layout_weight="1"
-					  android:layout_gravity="center_horizontal|bottom"
-					  android:orientation="horizontal">
-
-			<ru.iamserj.calculator.SquareButton android:id="@+id/button4"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_height="match_parent"
-					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_blue"
-					android:text="@string/four"
-					android:textSize="@dimen/btn_text_size"
-					android:fontFamily="@font/digital7"/>
-
-			<ru.iamserj.calculator.SquareButton android:id="@+id/button5"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_height="match_parent"
-					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_blue"
-					android:text="@string/five"
-					android:textSize="@dimen/btn_text_size"
-					android:fontFamily="@font/digital7"/>
-
-			<ru.iamserj.calculator.SquareButton android:id="@+id/button6"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_height="match_parent"
-					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_blue"
-					android:text="@string/six"
-					android:textSize="@dimen/btn_text_size"
-					android:fontFamily="@font/digital7"/>
-
-			<ru.iamserj.calculator.SquareButton android:id="@+id/buttonSubtract"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_height="match_parent"
-					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_green"
-					android:text="@string/sub"
-					android:textSize="@dimen/btn_text_size"/>
-		</LinearLayout>
-
-		<LinearLayout android:layout_width="wrap_content"
-					  android:layout_height="0dp"
-					  android:layout_weight="1"
-					  android:layout_gravity="center_horizontal|bottom"
-					  android:orientation="horizontal">
-
-			<ru.iamserj.calculator.SquareButton android:id="@+id/button1"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_height="match_parent"
-					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_blue"
-					android:text="@string/one"
-					android:textSize="@dimen/btn_text_size"
-					android:fontFamily="@font/digital7"/>
-
-			<ru.iamserj.calculator.SquareButton android:id="@+id/button2"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_height="match_parent"
-					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_blue"
-					android:text="@string/two"
-					android:textSize="@dimen/btn_text_size"
-					android:fontFamily="@font/digital7"/>
-
-			<ru.iamserj.calculator.SquareButton android:id="@+id/button3"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_height="match_parent"
-					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_blue"
-					android:text="@string/three"
-					android:textSize="@dimen/btn_text_size"
-					android:fontFamily="@font/digital7"/>
-
-			<ru.iamserj.calculator.SquareButton android:id="@+id/buttonAdd"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_height="match_parent"
-					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_green"
-					android:text="@string/add"
-					android:textSize="@dimen/btn_text_size"/>
-		</LinearLayout>
-
-		<LinearLayout android:layout_width="wrap_content"
-					  android:layout_height="0dp"
-					  android:layout_weight="1"
-					  android:layout_gravity="center_horizontal|bottom"
-					  android:orientation="horizontal">
-
-			<ru.iamserj.calculator.SquareButton android:id="@+id/button0"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_height="match_parent"
-					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_blue"
+			<TextView
+					android:id="@+id/resultDisplay"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="20dp"
+					android:layout_marginTop="50dp"
+					android:layout_marginRight="20dp"
+					android:background="@drawable/display_bg"
+					android:ellipsize="start"
+					android:fontFamily="@font/digital7"
+					android:gravity="center|end"
+					android:paddingLeft="15dp"
+					android:paddingTop="15dp"
+					android:paddingRight="15dp"
+					android:paddingBottom="18dp"
+					android:scrollHorizontally="true"
+					android:singleLine="true"
 					android:text="@string/zero"
-					android:textSize="@dimen/btn_text_size"
-					android:fontFamily="@font/digital7"/>
+					android:textSize="@dimen/result_text_size" />
 
-			<ru.iamserj.calculator.SquareButton android:id="@+id/buttonDot"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_height="match_parent"
-					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_blue"
-					android:text="@string/dot"
-					android:textFontWeight="700"
-					android:textSize="@dimen/btn_text_size"/>
+			<TextView
+					android:id="@+id/historyDisplay"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="20dp"
+					android:layout_marginTop="-4dp"
+					android:layout_marginRight="20dp"
+					android:background="@drawable/display_bg"
+					android:ellipsize="start"
+					android:fontFamily="@font/digital7"
+					android:gravity="center|end"
+					android:padding="15dp"
+					android:scrollHorizontally="true"
+					android:singleLine="true"
+					android:textSize="@dimen/history_text_size" />
+		</LinearLayout>
 
-			<ru.iamserj.calculator.SquareButton android:id="@+id/buttonBackspace"
-					android:layout_width="0dp"
-					android:layout_weight="1"
-					android:layout_height="match_parent"
-					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_blue"
-					android:text="@string/backspace"
-					android:textSize="@dimen/btn_text_size"/>
+		<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:layout_margin="5dp"
+				android:orientation="vertical"
+				android:padding="16dp">
 
-			<ru.iamserj.calculator.SquareButton android:id="@+id/buttonEqual"
-					android:layout_width="0dp"
+			<LinearLayout
+					android:layout_width="wrap_content"
+					android:layout_height="0dp"
+					android:layout_gravity="center_horizontal|bottom"
 					android:layout_weight="1"
-					android:layout_height="match_parent"
-					android:layout_margin="@dimen/btn_between_margins"
-					android:background="@drawable/bt_gradient_rounded_orange"
-					android:text="@string/equal"
-					android:textSize="@dimen/btn_text_size"/>
+					android:orientation="horizontal">
+
+				<ru.iamserj.calculator.SquareButton
+						android:id="@+id/buttonClear"
+						android:layout_width="0dp"
+						android:layout_height="match_parent"
+						android:layout_margin="@dimen/btn_between_margins"
+						android:layout_weight="1"
+						android:background="@drawable/bt_gradient_rounded_green"
+						android:text="@string/clear"
+						android:textSize="@dimen/btn_clear_text_size" />
+
+				<ru.iamserj.calculator.SquareButton
+						android:id="@+id/buttonBrackets"
+						android:layout_width="0dp"
+						android:layout_height="match_parent"
+						android:layout_margin="@dimen/btn_between_margins"
+						android:layout_weight="1"
+						android:background="@drawable/bt_gradient_rounded_green"
+						android:text="@string/brackets"
+						android:textSize="@dimen/btn_text_size" />
+
+				<ru.iamserj.calculator.SquareButton
+						android:id="@+id/buttonInvert"
+						android:layout_width="0dp"
+						android:layout_height="match_parent"
+						android:layout_margin="@dimen/btn_between_margins"
+						android:layout_weight="1"
+						android:background="@drawable/bt_gradient_rounded_green"
+						android:text="@string/invert"
+						android:textSize="@dimen/btn_text_size" />
+
+				<ru.iamserj.calculator.SquareButton
+						android:id="@+id/buttonDivide"
+						android:layout_width="0dp"
+						android:layout_height="match_parent"
+						android:layout_margin="@dimen/btn_between_margins"
+						android:layout_weight="1"
+						android:background="@drawable/bt_gradient_rounded_green"
+						android:text="@string/div"
+						android:textSize="@dimen/btn_text_size" />
+			</LinearLayout>
+
+			<LinearLayout
+					android:layout_width="wrap_content"
+					android:layout_height="0dp"
+					android:layout_gravity="center_horizontal|bottom"
+					android:layout_weight="1"
+					android:orientation="horizontal">
+
+				<ru.iamserj.calculator.SquareButton
+						android:id="@+id/button7"
+						style="@style/Button.Numeric"
+						android:text="@string/seven" />
+
+				<ru.iamserj.calculator.SquareButton
+						android:id="@+id/button8"
+						style="@style/Button.Numeric"
+						android:text="@string/eight" />
+
+				<ru.iamserj.calculator.SquareButton
+						android:id="@+id/button9"
+						style="@style/Button.Numeric"
+						android:text="@string/nine" />
+
+				<ru.iamserj.calculator.SquareButton
+						android:id="@+id/buttonMultiply"
+						android:layout_width="0dp"
+						android:layout_height="match_parent"
+						android:layout_margin="@dimen/btn_between_margins"
+						android:layout_weight="1"
+						android:background="@drawable/bt_gradient_rounded_green"
+						android:text="@string/mul"
+						android:textSize="@dimen/btn_text_size" />
+			</LinearLayout>
+
+			<LinearLayout
+					android:layout_width="wrap_content"
+					android:layout_height="0dp"
+					android:layout_gravity="center_horizontal|bottom"
+					android:layout_weight="1"
+					android:orientation="horizontal">
+
+				<ru.iamserj.calculator.SquareButton
+						android:id="@+id/button4"
+						style="@style/Button.Numeric"
+						android:text="@string/four" />
+
+				<ru.iamserj.calculator.SquareButton
+						android:id="@+id/button5"
+						style="@style/Button.Numeric"
+						android:text="@string/five" />
+
+				<ru.iamserj.calculator.SquareButton
+						android:id="@+id/button6"
+						style="@style/Button.Numeric"
+						android:text="@string/six" />
+
+				<ru.iamserj.calculator.SquareButton
+						android:id="@+id/buttonSubtract"
+						android:layout_width="0dp"
+						android:layout_height="match_parent"
+						android:layout_margin="@dimen/btn_between_margins"
+						android:layout_weight="1"
+						android:background="@drawable/bt_gradient_rounded_green"
+						android:text="@string/sub"
+						android:textSize="@dimen/btn_text_size" />
+			</LinearLayout>
+
+			<LinearLayout
+					android:layout_width="wrap_content"
+					android:layout_height="0dp"
+					android:layout_gravity="center_horizontal|bottom"
+					android:layout_weight="1"
+					android:orientation="horizontal">
+
+				<ru.iamserj.calculator.SquareButton
+						android:id="@+id/button1"
+						style="@style/Button.Numeric"
+						android:text="@string/one" />
+
+				<ru.iamserj.calculator.SquareButton
+						android:id="@+id/button2"
+						style="@style/Button.Numeric"
+						android:text="@string/two" />
+
+				<ru.iamserj.calculator.SquareButton
+						android:id="@+id/button3"
+						style="@style/Button.Numeric"
+						android:text="@string/three" />
+
+				<ru.iamserj.calculator.SquareButton
+						android:id="@+id/buttonAdd"
+						android:layout_width="0dp"
+						android:layout_height="match_parent"
+						android:layout_margin="@dimen/btn_between_margins"
+						android:layout_weight="1"
+						android:background="@drawable/bt_gradient_rounded_green"
+						android:text="@string/add"
+						android:textSize="@dimen/btn_text_size" />
+			</LinearLayout>
+
+			<LinearLayout
+					android:layout_width="wrap_content"
+					android:layout_height="0dp"
+					android:layout_gravity="center_horizontal|bottom"
+					android:layout_weight="1"
+					android:orientation="horizontal">
+
+				<ru.iamserj.calculator.SquareButton
+						android:id="@+id/button0"
+						style="@style/Button.Numeric"
+						android:text="@string/zero" />
+
+				<ru.iamserj.calculator.SquareButton
+						android:id="@+id/buttonDot"
+						style="@style/Button.Numeric"
+						android:text="@string/dot"
+						android:textFontWeight="700" />
+
+				<ru.iamserj.calculator.SquareButton
+						android:id="@+id/buttonBackspace"
+						style="@style/Button.Numeric"
+						android:text="@string/backspace" />
+
+				<ru.iamserj.calculator.SquareButton
+						android:id="@+id/buttonEqual"
+						android:layout_width="0dp"
+						android:layout_height="match_parent"
+						android:layout_margin="@dimen/btn_between_margins"
+						android:layout_weight="1"
+						android:background="@drawable/bt_gradient_rounded_orange"
+						android:text="@string/equal"
+						android:textSize="@dimen/btn_text_size" />
+			</LinearLayout>
+
 		</LinearLayout>
 
 	</LinearLayout>
