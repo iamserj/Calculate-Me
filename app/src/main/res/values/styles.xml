@@ -6,17 +6,22 @@
 	</style>
 
 	<style name="Button">
-		
+		<item name="android:layout_width">0dp</item>
+		<item name="android:layout_weight">1</item>
+		<item name="android:layout_height">match_parent</item>
+		<item name="android:layout_margin">@dimen/bt_between_margins</item>
+		<item name="android:fontFamily">@font/roboto_light_subset</item>
 	</style>
 	
+	<style name="Button.Operator" parent="Button">
+		<item name="android:background">@drawable/bt_rounded_green</item>
+		<item name="android:textSize">@dimen/bt_operator_text_size</item>
+	</style>
+
 	<style name="Button.Numeric" parent="Button">
-		<item name="android:layout_width">0dp</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_margin">@dimen/btn_between_margins</item>
-        <item name="android:background">@drawable/bt_gradient_rounded_blue</item>
-        <item name="android:textSize">@dimen/btn_text_size</item>
-        <item name="android:fontFamily">@font/digital7</item>
+		<item name="android:background">@drawable/bt_rounded_blue</item>
+        <item name="android:textSize">@dimen/bt_numeric_text_size</item>
+        <!--item name="android:fontFamily">@font/digital7</item-->
 	</style>
 
 </resources>

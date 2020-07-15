@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			 xmlns:tools="http://schemas.android.com/tools"
-			 xmlns:app="http://schemas.android.com/apk/res-auto"
-			 tools:ignore="NestedWeights"
-			 tools:context=".MainActivity"
-			 android:layout_height="match_parent"
-			 android:layout_width="match_parent"
-			 android:background="@android:color/background_dark">
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@android:color/background_dark"
+		tools:context=".MainActivity"
+		tools:ignore="NestedWeights">
 
-	<ImageView android:layout_width="match_parent"
-			   android:layout_height="match_parent"
-			   android:background="@drawable/background_round_rect"
-			   android:layout_margin="5dp"/>
+	<ImageView
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_margin="5dp"
+			android:background="@drawable/main_background" />
 
 	<LinearLayout
 			android:layout_width="match_parent"
@@ -22,43 +22,46 @@
 		<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:background="@drawable/display_background"
+				android:layout_marginLeft="20dp"
+				android:layout_marginRight="20dp"
 				android:orientation="vertical">
 
 			<TextView
-					android:id="@+id/resultDisplay"
+					android:id="@+id/tv_historyDisplay"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_marginLeft="20dp"
-					android:layout_marginTop="50dp"
-					android:layout_marginRight="20dp"
-					android:background="@drawable/display_bg"
 					android:ellipsize="start"
 					android:fontFamily="@font/digital7"
 					android:gravity="center|end"
-					android:paddingLeft="15dp"
-					android:paddingTop="15dp"
-					android:paddingRight="15dp"
-					android:paddingBottom="18dp"
+					android:padding="16dp"
+					android:scrollHorizontally="true"
+					android:singleLine="true"
+					android:textColor="@color/display_history_gray"
+					android:textSize="@dimen/display_history_text_size"
+					tools:text="7 + 5 / 2" />
+
+			<View
+					android:layout_width="match_parent"
+					android:layout_height="1dp"
+					android:background="@color/display_border_color"/>
+
+			<TextView
+					android:id="@+id/tv_resultDisplay"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:ellipsize="start"
+					android:fontFamily="@font/digital7"
+					android:gravity="center|end"
+					android:paddingLeft="16dp"
+					android:paddingTop="8dp"
+					android:paddingRight="16dp"
+					android:paddingBottom="8dp"
 					android:scrollHorizontally="true"
 					android:singleLine="true"
 					android:text="@string/zero"
-					android:textSize="@dimen/result_text_size" />
+					android:textSize="@dimen/display_result_text_size" />
 
-			<TextView
-					android:id="@+id/historyDisplay"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_marginLeft="20dp"
-					android:layout_marginTop="-4dp"
-					android:layout_marginRight="20dp"
-					android:background="@drawable/display_bg"
-					android:ellipsize="start"
-					android:fontFamily="@font/digital7"
-					android:gravity="center|end"
-					android:padding="15dp"
-					android:scrollHorizontally="true"
-					android:singleLine="true"
-					android:textSize="@dimen/history_text_size" />
 		</LinearLayout>
 
 		<LinearLayout
@@ -77,44 +80,25 @@
 					android:orientation="horizontal">
 
 				<ru.iamserj.calculator.SquareButton
-						android:id="@+id/buttonClear"
-						android:layout_width="0dp"
-						android:layout_height="match_parent"
-						android:layout_margin="@dimen/btn_between_margins"
-						android:layout_weight="1"
-						android:background="@drawable/bt_gradient_rounded_green"
-						android:text="@string/clear"
-						android:textSize="@dimen/btn_clear_text_size" />
+						android:id="@+id/bt_clear"
+						style="@style/Button.Operator"
+						android:text="@string/clear" />
 
 				<ru.iamserj.calculator.SquareButton
-						android:id="@+id/buttonBrackets"
-						android:layout_width="0dp"
-						android:layout_height="match_parent"
-						android:layout_margin="@dimen/btn_between_margins"
-						android:layout_weight="1"
-						android:background="@drawable/bt_gradient_rounded_green"
-						android:text="@string/brackets"
-						android:textSize="@dimen/btn_text_size" />
+						android:id="@+id/bt_brackets"
+						style="@style/Button.Operator"
+						android:textSize="@dimen/bt_brackets_text_size"
+						android:text="@string/brackets" />
 
 				<ru.iamserj.calculator.SquareButton
-						android:id="@+id/buttonInvert"
-						android:layout_width="0dp"
-						android:layout_height="match_parent"
-						android:layout_margin="@dimen/btn_between_margins"
-						android:layout_weight="1"
-						android:background="@drawable/bt_gradient_rounded_green"
-						android:text="@string/invert"
-						android:textSize="@dimen/btn_text_size" />
+						android:id="@+id/bt_invert"
+						style="@style/Button.Operator"
+						android:text="@string/invert" />
 
 				<ru.iamserj.calculator.SquareButton
-						android:id="@+id/buttonDivide"
-						android:layout_width="0dp"
-						android:layout_height="match_parent"
-						android:layout_margin="@dimen/btn_between_margins"
-						android:layout_weight="1"
-						android:background="@drawable/bt_gradient_rounded_green"
-						android:text="@string/div"
-						android:textSize="@dimen/btn_text_size" />
+						android:id="@+id/bt_divide"
+						style="@style/Button.Operator"
+						android:text="@string/div" />
 			</LinearLayout>
 
 			<LinearLayout
@@ -125,29 +109,24 @@
 					android:orientation="horizontal">
 
 				<ru.iamserj.calculator.SquareButton
-						android:id="@+id/button7"
+						android:id="@+id/bt_7"
 						style="@style/Button.Numeric"
 						android:text="@string/seven" />
 
 				<ru.iamserj.calculator.SquareButton
-						android:id="@+id/button8"
+						android:id="@+id/bt_8"
 						style="@style/Button.Numeric"
 						android:text="@string/eight" />
 
 				<ru.iamserj.calculator.SquareButton
-						android:id="@+id/button9"
+						android:id="@+id/bt_9"
 						style="@style/Button.Numeric"
 						android:text="@string/nine" />
 
 				<ru.iamserj.calculator.SquareButton
-						android:id="@+id/buttonMultiply"
-						android:layout_width="0dp"
-						android:layout_height="match_parent"
-						android:layout_margin="@dimen/btn_between_margins"
-						android:layout_weight="1"
-						android:background="@drawable/bt_gradient_rounded_green"
-						android:text="@string/mul"
-						android:textSize="@dimen/btn_text_size" />
+						android:id="@+id/bt_multiply"
+						style="@style/Button.Operator"
+						android:text="@string/mul" />
 			</LinearLayout>
 
 			<LinearLayout
@@ -158,29 +137,24 @@
 					android:orientation="horizontal">
 
 				<ru.iamserj.calculator.SquareButton
-						android:id="@+id/button4"
+						android:id="@+id/bt_4"
 						style="@style/Button.Numeric"
 						android:text="@string/four" />
 
 				<ru.iamserj.calculator.SquareButton
-						android:id="@+id/button5"
+						android:id="@+id/bt_5"
 						style="@style/Button.Numeric"
 						android:text="@string/five" />
 
 				<ru.iamserj.calculator.SquareButton
-						android:id="@+id/button6"
+						android:id="@+id/bt_6"
 						style="@style/Button.Numeric"
 						android:text="@string/six" />
 
 				<ru.iamserj.calculator.SquareButton
-						android:id="@+id/buttonSubtract"
-						android:layout_width="0dp"
-						android:layout_height="match_parent"
-						android:layout_margin="@dimen/btn_between_margins"
-						android:layout_weight="1"
-						android:background="@drawable/bt_gradient_rounded_green"
-						android:text="@string/sub"
-						android:textSize="@dimen/btn_text_size" />
+						android:id="@+id/bt_subtract"
+						style="@style/Button.Operator"
+						android:text="@string/sub" />
 			</LinearLayout>
 
 			<LinearLayout
@@ -191,29 +165,24 @@
 					android:orientation="horizontal">
 
 				<ru.iamserj.calculator.SquareButton
-						android:id="@+id/button1"
+						android:id="@+id/bt_1"
 						style="@style/Button.Numeric"
 						android:text="@string/one" />
 
 				<ru.iamserj.calculator.SquareButton
-						android:id="@+id/button2"
+						android:id="@+id/bt_2"
 						style="@style/Button.Numeric"
 						android:text="@string/two" />
 
 				<ru.iamserj.calculator.SquareButton
-						android:id="@+id/button3"
+						android:id="@+id/bt_3"
 						style="@style/Button.Numeric"
 						android:text="@string/three" />
 
 				<ru.iamserj.calculator.SquareButton
-						android:id="@+id/buttonAdd"
-						android:layout_width="0dp"
-						android:layout_height="match_parent"
-						android:layout_margin="@dimen/btn_between_margins"
-						android:layout_weight="1"
-						android:background="@drawable/bt_gradient_rounded_green"
-						android:text="@string/add"
-						android:textSize="@dimen/btn_text_size" />
+						android:id="@+id/bt_add"
+						style="@style/Button.Operator"
+						android:text="@string/add" />
 			</LinearLayout>
 
 			<LinearLayout
@@ -224,30 +193,27 @@
 					android:orientation="horizontal">
 
 				<ru.iamserj.calculator.SquareButton
-						android:id="@+id/button0"
+						android:id="@+id/bt_0"
 						style="@style/Button.Numeric"
 						android:text="@string/zero" />
 
 				<ru.iamserj.calculator.SquareButton
-						android:id="@+id/buttonDot"
+						android:id="@+id/bt_dot"
 						style="@style/Button.Numeric"
 						android:text="@string/dot"
 						android:textFontWeight="700" />
 
 				<ru.iamserj.calculator.SquareButton
-						android:id="@+id/buttonBackspace"
+						android:id="@+id/bt_backspace"
 						style="@style/Button.Numeric"
 						android:text="@string/backspace" />
 
 				<ru.iamserj.calculator.SquareButton
-						android:id="@+id/buttonEqual"
-						android:layout_width="0dp"
-						android:layout_height="match_parent"
-						android:layout_margin="@dimen/btn_between_margins"
-						android:layout_weight="1"
-						android:background="@drawable/bt_gradient_rounded_orange"
+						android:id="@+id/bt_equal"
+						style="@style/Button"
+						android:background="@drawable/bt_rounded_orange"
 						android:text="@string/equal"
-						android:textSize="@dimen/btn_text_size" />
+						android:textSize="@dimen/bt_operator_text_size" />
 			</LinearLayout>
 
 		</LinearLayout>

@@ -33,7 +33,7 @@ public class SquareButton extends Button {
 		super.onMeasure(widthMeasureSpec, widthMeasureSpec);
 		int width = MeasureSpec.getSize(widthMeasureSpec);
 		int height = MeasureSpec.getSize(heightMeasureSpec);
-		int size = width > height ? height : width;
+		int size = Math.min(width, height);
 		setMeasuredDimension(size, size); // make it square
 	}
 }

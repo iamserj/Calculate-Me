@@ -4,18 +4,22 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
 
+
+	<color name="btn_stroke_gray">#808080</color>
+
+	<color name="btn_gradient_green">#B4D2B4</color>
+	<color name="btn_gradient_green_pressed">#B4E6B4</color>
+
     <color name="btn_gradient_blue">#BECDD2</color>
     <color name="btn_gradient_blue_pressed">#A5CDD2</color>
 
 	<color name="btn_gradient_orange">#EBCD6E</color>
     <color name="btn_gradient_orange_pressed">#FFE16E</color>
 
-	<color name="btn_gradient_green">#B4D2B4</color>
-	<color name="btn_gradient_green_pressed">#B4E6B4</color>
 
-	<color name="btn_stroke_gray">#808080</color>
+	<color name="display_history_gray">#404040</color>
 
 	<color name="display_bg_color">#BDB27C</color>
-	<color name="display_bg_border_color">#2B2B2B</color>
+	<color name="display_border_color">#2B2B2B</color>
 	<color name="display_operation_sign">#3F51B5</color>
 </resources>

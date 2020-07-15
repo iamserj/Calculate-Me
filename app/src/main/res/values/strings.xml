@@ -17,10 +17,10 @@
 	<string name="add">+</string>
 	<string name="div">\u00F7</string>
 
-	<string name="brackets">( )</string>
+	<string name="brackets">(&#160;&#160;&#160;)</string>
 	<string name="invert">\u00b1</string>
 	<string name="equal">=</string>
-	<string name="clear">CLEAR</string>
+	<string name="clear">C</string>
 	<string name="backspace">\u232b</string>
 	<string name="dot">.</string>
 </resources>

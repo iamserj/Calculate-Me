@@ -41,8 +41,8 @@ public class Calculate {
 			double parseExpression() {
 				double x = parseTerm();
 				for (;;) {
-					if      (eat('+')) x += parseTerm(); // addition
-					else if (eat('-')) x -= parseTerm(); // subtraction
+					if      (eat('+')) x += parseTerm();                // addition
+					else if (eat('-')) x -= parseTerm();                // subtraction
 					else return x;
 				}
 			}
@@ -50,22 +50,22 @@ public class Calculate {
 			double parseTerm() {
 				double x = parseFactor();
 				for (;;) {
-					if      (eat('*')) x *= parseFactor(); // multiplication
-					else if (eat('/')) x /= parseFactor(); // division
+					if      (eat('*')) x *= parseFactor();              // multiplication
+					else if (eat('/')) x /= parseFactor();              // division
 					else return x;
 				}
 			}
 			
 			double parseFactor() {
-				if (eat('+')) return parseFactor(); // unary plus
-				if (eat('-')) return -parseFactor(); // unary minus
+				if (eat('+')) return parseFactor();                     // unary plus
+				if (eat('-')) return -parseFactor();                    // unary minus
 				
 				double x;
 				int startPos = this.pos;
-				if (eat('(')) { // parentheses
+				if (eat('(')) {                                         // parentheses
 					x = parseExpression();
 					eat(')');
-				} else if ((ch >= '0' && ch <= '9') || ch == '.') { // numbers
+				} else if ((ch >= '0' && ch <= '9') || ch == '.') {     // numbers
 					while ((ch >= '0' && ch <= '9') || ch == '.') nextChar();
 					x = Double.parseDouble(str.substring(startPos, this.pos));
 				} else {
