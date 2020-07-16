@@ -6,6 +6,7 @@ package ru.iamserj.calculator;
  */
 
 public class Calculate {
+	
 	public static double evaluate(final String str) {
 		
 		return new Object() {

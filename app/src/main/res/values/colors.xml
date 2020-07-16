@@ -7,14 +7,20 @@
 
 	<color name="btn_stroke_gray">#808080</color>
 
-	<color name="btn_gradient_green">#B4D2B4</color>
-	<color name="btn_gradient_green_pressed">#B4E6B4</color>
 
-    <color name="btn_gradient_blue">#BECDD2</color>
-    <color name="btn_gradient_blue_pressed">#A5CDD2</color>
+	<color name="btn_gradient_red">#FF8A80</color>
+	<color name="btn_gradient_red_pressed">#FF695C</color>
 
-	<color name="btn_gradient_orange">#EBCD6E</color>
-    <color name="btn_gradient_orange_pressed">#FFE16E</color>
+	<color name="btn_gradient_green">#A5D6A7</color>
+	<color name="btn_gradient_green_pressed">#8FCC91</color>
+
+	<color name="btn_gradient_blue">#B3E5FC</color>
+	<color name="btn_gradient_blue_pressed">#9DDDFB</color>
+
+	<color name="btn_gradient_yellow">#FFB74D</color>
+	<color name="btn_gradient_yellow_pressed">#FFAD33</color>
+
+
 
 
 	<color name="display_history_gray">#404040</color>

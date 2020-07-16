@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.*;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -14,36 +15,25 @@ import android.text.style.RelativeSizeSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 //public class MainActivity extends Activity implements OnClickListener, OnTouchListener {
 public class MainActivity extends Activity implements OnClickListener {
-
+	
 	private static final String TAG = "123456";
-	//DecimalFormat decimalFormat = new DecimalFormat("#.##########");
-
-	private static final char CLEAR = 'C' ;
-	private static final char ADDITION = '+';
-	private static final char SUBTRACTION = '-';
-	private static final char MULTIPLICATION = '*';
-	private static final char DIVISION = '/';
-	private static final char EMPTY = '0';
-	private static final char DOT = '.';
-
-	private double valueOne = 0; //Double.MIN_VALUE;
-	private double valueTwo = 0; //Double.MIN_VALUE;
-
+	
+	private boolean clearedOnce = false;
 	private boolean resultIsNegative = false;
 	private boolean resultIsEmpty = true;
-	//private boolean finalResult = false;
-	private boolean clearedOnce = false;
 	private boolean dotPresence = false;
 	private boolean bracketOpened = false;
 	private boolean bracketWithSignAdded = false;
 	private boolean lastDigitIsNumeric = true;
 	private boolean zeroWasAdded = false;
-
+	
+	private ImageView iv_mainBackground;
 	private TextView tv_resultDisplay, tv_historyDisplay;
 	private String currentText;
 
@@ -60,7 +50,12 @@ public class MainActivity extends Activity implements OnClickListener {
 		//getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		//if (getSupportActionBar() != null) { getSupportActionBar().hide(); }
 		setContentView(R.layout.activity_main);
-
+		
+		Bitmap bg = ImageHelper.CreateBitmapRoundCorner(getWindowManager(), getResources());
+		iv_mainBackground = findViewById(R.id.iv_mainBackground);
+		iv_mainBackground.setImageBitmap(bg);
+		bg = null;
+		
 		tv_resultDisplay = findViewById(R.id.tv_resultDisplay);
 		tv_historyDisplay = findViewById(R.id.tv_historyDisplay);
 
@@ -394,14 +389,20 @@ public class MainActivity extends Activity implements OnClickListener {
 					}
 				}
 				currentText = trimMathSignEnding(currentText);		// trim [+ - * /] endings
+				tv_historyDisplay.setText(currentText);
 				double result = Calculate.evaluate(currentText);	// evaluate expression
 				String resFormatted = cutFloatIfInteger(result);    // cut floating zero from integer
 
 				// save real result
 				// cut showable result
 
-				setSpannedText(resFormatted);
-				tv_historyDisplay.setText(currentText);
+				//setSpannedText(resFormatted);
+				if (resFormatted.toLowerCase().equals("infinity")) {
+					tv_resultDisplay.setText("DIVISION BY ZERO  :)");
+				} else {
+					tv_resultDisplay.setText(resFormatted);
+				}
+				
 				break;
 
 			default:
@@ -426,6 +427,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	private void setSpannedText(String str) {
 		tv_resultDisplay.setText("");
+		
 		//str = str.replaceAll("\u00A0","");
 		int count = 0;
 		for (int i = 0; i < str.length(); i++) {
@@ -525,6 +527,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	private String trimMathSignEnding(String str) {
 		switch (str.charAt(str.length() - 1)) {
+			// FIXME: if result is ( and push = , app crashes
 			case '+':
 			case '-':
 			case '*':

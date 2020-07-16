@@ -12,9 +12,14 @@
 		<item name="android:layout_margin">@dimen/bt_between_margins</item>
 		<item name="android:fontFamily">@font/roboto_light_subset</item>
 	</style>
-	
+
 	<style name="Button.Operator" parent="Button">
 		<item name="android:background">@drawable/bt_rounded_green</item>
+		<item name="android:textSize">@dimen/bt_operator_text_size</item>
+	</style>
+
+	<style name="Button.Operator.Clear" parent="Button.Operator">
+		<item name="android:background">@drawable/bt_rounded_red</item>
 		<item name="android:textSize">@dimen/bt_operator_text_size</item>
 	</style>
 

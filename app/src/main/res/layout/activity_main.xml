@@ -7,11 +7,17 @@
 		tools:context=".MainActivity"
 		tools:ignore="NestedWeights">
 
+
 	<ImageView
+			android:id="@+id/iv_mainBackground"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:layout_margin="5dp"
-			android:background="@drawable/main_background" />
+			android:layout_marginLeft="2dp"
+			android:layout_marginRight="2dp"
+			android:layout_marginTop="2dp"
+			android:layout_marginBottom="2dp"
+			android:scaleType="fitXY"
+			tools:background="@drawable/metal_bg"/>
 
 	<LinearLayout
 			android:layout_width="match_parent"
@@ -81,7 +87,7 @@
 
 				<ru.iamserj.calculator.SquareButton
 						android:id="@+id/bt_clear"
-						style="@style/Button.Operator"
+						style="@style/Button.Operator.Clear"
 						android:text="@string/clear" />
 
 				<ru.iamserj.calculator.SquareButton
