@@ -5,22 +5,23 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//public class MainActivity extends Activity implements OnClickListener, OnTouchListener {
-public class MainActivity extends Activity implements OnClickListener {
+public class MainActivity extends Activity implements OnClickListener, View.OnTouchListener {
+//public class MainActivity extends Activity implements OnClickListener {
 	
 	private static final String TAG = "123456";
 	
@@ -36,17 +37,17 @@ public class MainActivity extends Activity implements OnClickListener {
 	private ImageView iv_mainBackground;
 	private TextView tv_resultDisplay, tv_historyDisplay;
 	private String currentText;
-
+	
 	// IDs of all the numeric buttons
 	private int[] numericButtons = {R.id.bt_0, R.id.bt_1, R.id.bt_2, R.id.bt_3, R.id.bt_4, R.id.bt_5, R.id.bt_6, R.id.bt_7, R.id.bt_8, R.id.bt_9};
-
+	
 	// IDs of all the operator buttons
 	private int[] operatorButtons = {R.id.bt_add, R.id.bt_backspace, R.id.bt_brackets, R.id.bt_invert, R.id.bt_clear, R.id.bt_divide, R.id.bt_dot, R.id.bt_equal, R.id.bt_multiply, R.id.bt_subtract};
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		//requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		//if (getSupportActionBar() != null) { getSupportActionBar().hide(); }
 		setContentView(R.layout.activity_main);
@@ -58,49 +59,60 @@ public class MainActivity extends Activity implements OnClickListener {
 		
 		tv_resultDisplay = findViewById(R.id.tv_resultDisplay);
 		tv_historyDisplay = findViewById(R.id.tv_historyDisplay);
-
+		
 		tv_resultDisplay.setOnClickListener(this);
-
+		
 		for (int id : numericButtons) {
 			findViewById(id).setOnClickListener(this);
-			//findViewById(id).setOnTouchListener(handleTouch);
+			findViewById(id).setOnTouchListener(this);
 		}
 		for (int id : operatorButtons) {
 			findViewById(id).setOnClickListener(this);
-			//findViewById(id).setOnTouchListener(handleTouch);
+			findViewById(id).setOnTouchListener(this);
 		}
-
+		// TODO: add backspace hold listener
+		
 	}
-
+	
 	// TODO: history show only last actions, e.g. 7 + 5 / 2
 	// TODO: buttons add border and shadow
 	// TODO: display box shadow
 	// TODO: background in metal
-
+	
 	// TODO: add touch animation
-	/*@Override
+	@Override
 	public boolean onTouch(View view, MotionEvent motionEvent) {
+		
 		int action = motionEvent.getAction();
-
+		int x = (int) motionEvent.getX();
+		int y = (int) motionEvent.getY();
+		
 		if (action == MotionEvent.ACTION_DOWN) {
-			view.animate().scaleXBy(100f).setDuration(5000).start();
-			view.animate().scaleYBy(100f).setDuration(5000).start();
-			return true;
+			view.animate().scaleX(0.975f).setDuration(50).start();
+			view.animate().scaleY(0.975f).setDuration(50).start();
+			Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+			vibrator.vibrate(50);
+			onClick(view);
 		} else if (action == MotionEvent.ACTION_UP) {
-			view.animate().cancel();
-			view.animate().scaleX(1f).setDuration(1000).start();
-			view.animate().scaleY(1f).setDuration(1000).start();
-			return true;
+			//view.animate().cancel();
+			view.animate().scaleX(1f).setDuration(100).start();
+			view.animate().scaleY(1f).setDuration(100).start();
 		}
-
-		return false;
-	}*/
-
+		
+		return true;
+	}
+	
+	/*new android.os.Handler().postDelayed(new Runnable() {
+		public void run() {
+			// do something here
+		}
+	}, 2000);*/
+	
 	@Override
 	public void onClick(View view) {
 		currentText = tv_resultDisplay.getText().toString();
-		currentText = currentText.replaceAll("\u00A0","");
-
+		currentText = currentText.replaceAll("\u00A0", "");
+		
 		if (view.getId() == R.id.tv_resultDisplay) {
 			// TODO: if result is empty (0) or INFINITY, don't copy it
 			ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -116,7 +128,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				currentText = "0";
 			}*/
 		}
-
+		
 		if (resultIsEmpty) {
 			switch (view.getId()) {
 				//case R.id.button0:
@@ -134,13 +146,13 @@ public class MainActivity extends Activity implements OnClickListener {
 					break;
 			}
 		}
-
+		
 		if (view.getId() != R.id.bt_dot) {
 			zeroWasAdded = false;
 		}
-
+		
 		switch (view.getId()) {
-
+			
 			case R.id.bt_0:
 				if (resultIsEmpty) break;
 				setSpannedText(currentText + "0");
@@ -184,15 +196,15 @@ public class MainActivity extends Activity implements OnClickListener {
 				lastDigitIsNumeric = true;
 				break;
 			// TODO: if (last is closed bracket) add *: (5*8)9 -> (5*8) * 9
-			// TODO: number length 10 digits maximum
+			// TODO: number length 10 digits maximum. Try android:ems="10" (10 letters "M")
 			// TODO: add little colons 1,000,000
-
-
+			
+			
 			// UTILS BUTTONS
 			// <-  <-  <-  <-  <-  <-  <-  <-  <-  <-  <-  <-  <-  <-  <-  <-  <-
 			case R.id.bt_backspace:
 				if (resultIsEmpty) break;
-
+				
 				if (currentText.length() == 1) {
 					resultIsEmpty = true;
 					bracketOpened = false;
@@ -205,18 +217,21 @@ public class MainActivity extends Activity implements OnClickListener {
 						resultIsEmpty = true;
 						currentText = getResources().getString(R.string.zero);              // set 0
 					} else {
-						if (currentText.endsWith(".")) dotPresence = false;                 // remove dot
-						if (currentText.endsWith("(")) bracketOpened = false;               // remove open bracket
-						if (currentText.endsWith(")")) bracketOpened = true;                // remove close bracket
+						if (currentText.endsWith("."))
+							dotPresence = false;                 // remove dot
+						if (currentText.endsWith("("))
+							bracketOpened = false;               // remove open bracket
+						if (currentText.endsWith(")"))
+							bracketOpened = true;                // remove close bracket
 						currentText = currentText.substring(0, currentText.length() - 1);   // just remove last digit
-						if (Character.isDigit(currentText.charAt(currentText.length()-1))) {
+						if (Character.isDigit(currentText.charAt(currentText.length() - 1))) {
 							lastDigitIsNumeric = true;
 						}
 					}
 				}
 				setSpannedText(currentText);
 				break;
-
+			
 			// ( )  ( )  ( )  ( )  ( )  ( )  ( )  ( )  ( )  ( )  ( )  ( )  ( )  ( )
 			case R.id.bt_brackets:
 				if (resultIsEmpty) {
@@ -225,7 +240,7 @@ public class MainActivity extends Activity implements OnClickListener {
 					bracketOpened = true;
 					break;
 				}
-
+				
 				if (bracketOpened) {
 					if (currentText.endsWith("(")) {                    // case "()"
 						int cutEnd = bracketWithSignAdded ? 2 : 1;      // number of digits to cut from end
@@ -255,9 +270,9 @@ public class MainActivity extends Activity implements OnClickListener {
 				}
 				bracketOpened = !bracketOpened;
 				//Log.d("---------", bracketOpened+"");
-
+				
 				break;
-
+			
 			// +-  	+-  +-  +-  +-  +-  +-  +-  +-  +-  +-  +-  +-  +-  +-  +-  +-
 			case R.id.bt_invert:
 				// TODO: apply invert only to last number in expression
@@ -268,11 +283,11 @@ public class MainActivity extends Activity implements OnClickListener {
 				}
 				resultIsNegative = !resultIsNegative;
 				break;
-
+			
 			// CLEAR  CLEAR  CLEAR  CLEAR  CLEAR  CLEAR  CLEAR  CLEAR  CLEAR  CLEAR
 			case R.id.bt_clear:
 				lastDigitIsNumeric = false;
-
+				
 				// TODO: clean conditions
 				if (!clearedOnce) {
 					clearedOnce = true;
@@ -289,10 +304,10 @@ public class MainActivity extends Activity implements OnClickListener {
 					tv_historyDisplay.setText("");
 				}
 				break;
-
+			
 			// .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .
 			case R.id.bt_dot:
-
+				
 				// TODO: check for dot presence in last number. E.g. after backspace use
 				if (dotPresence) {
 					if (currentText.endsWith(".")) {
@@ -311,31 +326,33 @@ public class MainActivity extends Activity implements OnClickListener {
 						setSpannedText(currentText + ".");
 					} else {
 						zeroWasAdded = true;
-						setSpannedText(currentText + "0.");		// allows dot after operational sign. 5+. -> 5+0.
+						setSpannedText(currentText + "0.");        // allows dot after operational sign. 5+. -> 5+0.
 					}
 					resultIsEmpty = false;
 				}
 				// TODO: don't allow dot after result is given
 				break;
-
+			
 			// OPERATION BUTTONS
 			// +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +  +
 			case R.id.bt_add:
 				if (bracketOpened && currentText.endsWith("(")) break;
-				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
+				if (dotPresence && currentText.endsWith("."))
+					currentText = currentText.substring(0, currentText.length() - 1);
 				lastDigitIsNumeric = false;
-
+				
 				if (resultIsEmpty) {
 					resultIsEmpty = false;
 				}
 				dotPresence = false;
 				addOperationSign("+");
 				break;
-
+			
 			// -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
 			case R.id.bt_subtract:
 				//if (bracketOpened && currentText.endsWith("(")) break;
-				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
+				if (dotPresence && currentText.endsWith("."))
+					currentText = currentText.substring(0, currentText.length() - 1);
 				lastDigitIsNumeric = false;
 				if (resultIsEmpty) {
 					resultIsEmpty = false;
@@ -343,11 +360,12 @@ public class MainActivity extends Activity implements OnClickListener {
 				dotPresence = false;
 				addOperationSign("-");
 				break;
-
+			
 			// *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
 			case R.id.bt_multiply:
 				if (bracketOpened && currentText.endsWith("(")) break;
-				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
+				if (dotPresence && currentText.endsWith("."))
+					currentText = currentText.substring(0, currentText.length() - 1);
 				lastDigitIsNumeric = false;
 				if (resultIsEmpty) {
 					resultIsEmpty = false;
@@ -355,11 +373,12 @@ public class MainActivity extends Activity implements OnClickListener {
 				dotPresence = false;
 				addOperationSign("*");
 				break;
-
+			
 			// /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /
 			case R.id.bt_divide:
 				if (bracketOpened && currentText.endsWith("(")) break;
-				if (dotPresence && currentText.endsWith(".")) currentText = currentText.substring(0, currentText.length() - 1);
+				if (dotPresence && currentText.endsWith("."))
+					currentText = currentText.substring(0, currentText.length() - 1);
 				lastDigitIsNumeric = false;
 				if (resultIsEmpty) {
 					resultIsEmpty = false;
@@ -367,35 +386,35 @@ public class MainActivity extends Activity implements OnClickListener {
 				dotPresence = false;
 				addOperationSign("/");
 				break;
-
-
+			
+			
 			// =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =
 			case R.id.bt_equal:
 				if (resultIsEmpty) break;
-
+				
 				lastDigitIsNumeric = false;
 				// TODO: if tap operationals after final result, count with final result, set booleans lastDigitIsNumeric, dotPresence, resultIsNegative
 				// TODO: if tap numerics after final result, clean and start new expression
 				dotPresence = false;
 				resultIsNegative = false;
 				//finalResult = true;
-
+				
 				if (bracketOpened) {
 					int lastIndex = currentText.lastIndexOf("(");
-        			if (lastIndex != -1) {
+					if (lastIndex != -1) {
 						String beginString = currentText.substring(0, lastIndex);
 						String endString = currentText.substring(lastIndex + 1);
 						currentText = beginString + endString;
 					}
 				}
-				currentText = trimMathSignEnding(currentText);		// trim [+ - * /] endings
+				currentText = trimMathSignEnding(currentText);        // trim [+ - * /] endings
 				tv_historyDisplay.setText(currentText);
-				double result = Calculate.evaluate(currentText);	// evaluate expression
+				double result = Calculate.evaluate(currentText);    // evaluate expression
 				String resFormatted = cutFloatIfInteger(result);    // cut floating zero from integer
-
+				
 				// save real result
 				// cut showable result
-
+				
 				//setSpannedText(resFormatted);
 				if (resFormatted.toLowerCase().equals("infinity")) {
 					tv_resultDisplay.setText("DIVISION BY ZERO  :)");
@@ -404,16 +423,16 @@ public class MainActivity extends Activity implements OnClickListener {
 				}
 				
 				break;
-
+			
 			default:
 				Toast.makeText(this, "wtf?", Toast.LENGTH_LONG).show();
 		}
 	}
-
-
+	
+	
 	private void addOperationSign(String sign) {
-		char lastSymbol = currentText.charAt(currentText.length()-1);
-
+		char lastSymbol = currentText.charAt(currentText.length() - 1);
+		
 		switch (lastSymbol) {
 			case '+':
 			case '-':
@@ -424,7 +443,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 		setSpannedText(currentText + sign);
 	}
-
+	
 	private void setSpannedText(String str) {
 		tv_resultDisplay.setText("");
 		
@@ -439,11 +458,11 @@ public class MainActivity extends Activity implements OnClickListener {
 					Spannable spacing = new SpannableString("\u00A0");
 					spacing.setSpan(new RelativeSizeSpan(0.5f), 0, spacing.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 					tv_resultDisplay.append(spacing);
-
+					
 					Spannable coloredSign = new SpannableString(String.valueOf(str.charAt(i)));
 					coloredSign.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.display_operation_sign)), 0, coloredSign.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 					tv_resultDisplay.append(coloredSign);
-
+					
 					spacing.setSpan(new RelativeSizeSpan(0.5f), 0, spacing.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 					tv_resultDisplay.append(spacing);
 					break;
@@ -451,17 +470,17 @@ public class MainActivity extends Activity implements OnClickListener {
 					tv_resultDisplay.append(String.valueOf(str.charAt(i)));
 			}
 		}
-
+		
 		// TODO:
 		// if result is very long, trim it to less digits + E
 		// if entered number is very long, don't allow to enter (if trying to enter new number, return operation)
-
+		
 		// On entry set max digits = 10 symb
-
-
+		
+		
 		// If you just want to use AWT, then use Graphics.getFontMetrics (optionally specifying the font, for a non-default one) to get a FontMetrics
 		// then FontMetrics.stringWidth to find the width for the specified string.
-
+		
 		// 1) get currentText width
 /*		Graphics g;
 		String s = textDisplay.getText().toString();
@@ -514,17 +533,16 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	*/
 	}
-
-
-
+	
+	
 	private String cutFloatIfInteger(double result) {
 		// cut floating zero from integer
 		int j = (int) result;
 		return (result == j) ? String.valueOf(j) : String.valueOf(result);
-
-
+		
+		
 	}
-
+	
 	private String trimMathSignEnding(String str) {
 		switch (str.charAt(str.length() - 1)) {
 			// FIXME: if result is ( and push = , app crashes
@@ -537,7 +555,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 		return str;
 	}
-
+	
 }
 
 // TODO: move common buttons style to styles.xml Button.Numeric + other buttons

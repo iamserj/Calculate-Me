@@ -3,8 +3,7 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
-
-
+	
 	<color name="btn_stroke_gray">#808080</color>
 
 
@@ -21,8 +20,7 @@
 	<color name="btn_gradient_yellow_pressed">#FFAD33</color>
 
 
-
-
+	<color name="display_result_black">#212121</color>
 	<color name="display_history_gray">#404040</color>
 
 	<color name="display_bg_color">#BDB27C</color>

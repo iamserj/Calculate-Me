@@ -1,7 +1,11 @@
 <resources>
 
 	<!-- Base application theme. -->
-	<style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+	<style name="AppTheme" parent="android:Theme.Black.NoTitleBar">
+			<!-- Customize your theme here. -->
+	</style>
+
+	<style name="AppTheme1" parent="android:Theme.Holo.Light.DarkActionBar">
 		<!-- Customize your theme here. -->
 	</style>
 
@@ -23,10 +27,20 @@
 		<item name="android:textSize">@dimen/bt_operator_text_size</item>
 	</style>
 
+	<style name="Button.Operator.Equal" parent="Button.Operator">
+		<item name="android:background">@drawable/bt_rounded_orange</item>
+		<item name="android:textSize">@dimen/bt_operator_text_size</item>
+	</style>
+
 	<style name="Button.Numeric" parent="Button">
 		<item name="android:background">@drawable/bt_rounded_blue</item>
         <item name="android:textSize">@dimen/bt_numeric_text_size</item>
         <!--item name="android:fontFamily">@font/digital7</item-->
+	</style>
+
+	<style name="Button.Background" parent="Button">
+		<item name="android:background">@drawable/bt_rounded_black_background</item>
+		<item name="android:textSize">@dimen/bt_numeric_text_size</item>
 	</style>
 
 </resources>
