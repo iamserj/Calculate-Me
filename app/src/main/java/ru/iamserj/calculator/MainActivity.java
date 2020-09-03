@@ -13,15 +13,14 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity implements OnClickListener, View.OnTouchListener {
-//public class MainActivity extends Activity implements OnClickListener {
+public class MainActivity extends Activity implements View.OnTouchListener {
 	
 	private static final String TAG = "123456";
 	
@@ -44,12 +43,12 @@ public class MainActivity extends Activity implements OnClickListener, View.OnTo
 	// IDs of all the operator buttons
 	private int[] operatorButtons = {R.id.bt_add, R.id.bt_backspace, R.id.bt_brackets, R.id.bt_invert, R.id.bt_clear, R.id.bt_divide, R.id.bt_dot, R.id.bt_equal, R.id.bt_multiply, R.id.bt_subtract};
 	
+	// IDs of all fake background buttons
+	private int[] fakeButtons = {R.id.bt_fake_0, R.id.bt_fake_1, R.id.bt_fake_2, R.id.bt_fake_3, R.id.bt_fake_4, R.id.bt_fake_5, R.id.bt_fake_6, R.id.bt_fake_7, R.id.bt_fake_8, R.id.bt_fake_9, R.id.bt_fake_10, R.id.bt_fake_11, R.id.bt_fake_12, R.id.bt_fake_13, R.id.bt_fake_14, R.id.bt_fake_15, R.id.bt_fake_16, R.id.bt_fake_17, R.id.bt_fake_18, R.id.bt_fake_19};
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//requestWindowFeature(Window.FEATURE_NO_TITLE);
-		//getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		//if (getSupportActionBar() != null) { getSupportActionBar().hide(); }
 		setContentView(R.layout.activity_main);
 		
 		Bitmap bg = ImageHelper.CreateBitmapRoundCorner(getWindowManager(), getResources());
@@ -60,26 +59,40 @@ public class MainActivity extends Activity implements OnClickListener, View.OnTo
 		tv_resultDisplay = findViewById(R.id.tv_resultDisplay);
 		tv_historyDisplay = findViewById(R.id.tv_historyDisplay);
 		
-		tv_resultDisplay.setOnClickListener(this);
+		tv_resultDisplay.setOnClickListener(resultDisplayClickListener);
 		
 		for (int id : numericButtons) {
-			findViewById(id).setOnClickListener(this);
 			findViewById(id).setOnTouchListener(this);
 		}
 		for (int id : operatorButtons) {
-			findViewById(id).setOnClickListener(this);
 			findViewById(id).setOnTouchListener(this);
 		}
-		// TODO: add backspace hold listener
-		
+		for (int id : fakeButtons) {
+			findViewById(id).setVisibility(View.INVISIBLE);
+		}
 	}
 	
-	// TODO: history show only last actions, e.g. 7 + 5 / 2
-	// TODO: buttons add border and shadow
-	// TODO: display box shadow
-	// TODO: background in metal
 	
-	// TODO: add touch animation
+	View.OnClickListener resultDisplayClickListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			if (view.getId() == R.id.tv_resultDisplay) {
+				// TODO: if result is empty (0) or INFINITY, don't copy it
+				ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+				ClipData clip = ClipData.newPlainText("MyCalc Copied Result", currentText);
+				clipboard.setPrimaryClip(clip);
+				Toast.makeText(getApplicationContext(), "Result Copied", Toast.LENGTH_SHORT).show();
+			} else {
+			/*if (finalResult) {				// TODO: what is it "finalResult"?
+				finalResult = false;
+				textHistory.setText(currentText);
+				resultIsEmpty = true;
+				currentText = "0";
+			}*/
+			}
+		}
+	};
+	
 	@Override
 	public boolean onTouch(View view, MotionEvent motionEvent) {
 		
@@ -87,47 +100,36 @@ public class MainActivity extends Activity implements OnClickListener, View.OnTo
 		int x = (int) motionEvent.getX();
 		int y = (int) motionEvent.getY();
 		
+		final String buttonTag = (String) view.getTag();
+		final int currentFakeButtonID = getResources().getIdentifier(buttonTag, "id", getPackageName());
+		final SquareButton currentFakeButton = (SquareButton) findViewById(currentFakeButtonID);
+		
 		if (action == MotionEvent.ACTION_DOWN) {
+			currentFakeButton.setVisibility(View.VISIBLE);
 			view.animate().scaleX(0.975f).setDuration(50).start();
 			view.animate().scaleY(0.975f).setDuration(50).start();
 			Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 			vibrator.vibrate(50);
-			onClick(view);
+			buttonClickListener(view);
 		} else if (action == MotionEvent.ACTION_UP) {
+			view.performClick();
 			//view.animate().cancel();
 			view.animate().scaleX(1f).setDuration(100).start();
 			view.animate().scaleY(1f).setDuration(100).start();
+			new android.os.Handler().postDelayed(new Runnable() {
+				public void run() {
+					currentFakeButton.setVisibility(View.INVISIBLE);
+				}
+			}, 100);
 		}
 		
 		return true;
 	}
 	
-	/*new android.os.Handler().postDelayed(new Runnable() {
-		public void run() {
-			// do something here
-		}
-	}, 2000);*/
 	
-	@Override
-	public void onClick(View view) {
+	public void buttonClickListener(View view) {
 		currentText = tv_resultDisplay.getText().toString();
-		currentText = currentText.replaceAll("\u00A0", "");
-		
-		if (view.getId() == R.id.tv_resultDisplay) {
-			// TODO: if result is empty (0) or INFINITY, don't copy it
-			ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-			ClipData clip = ClipData.newPlainText("MyCalc Copied Result", currentText);
-			clipboard.setPrimaryClip(clip);
-			Toast.makeText(this, "Result copied", Toast.LENGTH_SHORT).show();
-			return;
-		} else {
-			/*if (finalResult) {				// TODO: what is it, finalResult?
-				finalResult = false;
-				textHistory.setText(currentText);
-				resultIsEmpty = true;
-				currentText = "0";
-			}*/
-		}
+		currentText = currentText.replaceAll("\u00A0", "");     // remove no-break spaces
 		
 		if (resultIsEmpty) {
 			switch (view.getId()) {
@@ -156,7 +158,6 @@ public class MainActivity extends Activity implements OnClickListener, View.OnTo
 			case R.id.bt_0:
 				if (resultIsEmpty) break;
 				setSpannedText(currentText + "0");
-				// TODO: don't allow 2 zeros in a row if it is a start of non-float number 0005 -> 5
 				lastDigitIsNumeric = true;
 				break;
 			case R.id.bt_1:
@@ -195,10 +196,6 @@ public class MainActivity extends Activity implements OnClickListener, View.OnTo
 				setSpannedText(currentText + "9");
 				lastDigitIsNumeric = true;
 				break;
-			// TODO: if (last is closed bracket) add *: (5*8)9 -> (5*8) * 9
-			// TODO: number length 10 digits maximum. Try android:ems="10" (10 letters "M")
-			// TODO: add little colons 1,000,000
-			
 			
 			// UTILS BUTTONS
 			// <-  <-  <-  <-  <-  <-  <-  <-  <-  <-  <-  <-  <-  <-  <-  <-  <-
@@ -390,24 +387,24 @@ public class MainActivity extends Activity implements OnClickListener, View.OnTo
 			
 			// =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =  =
 			case R.id.bt_equal:
-				if (resultIsEmpty) break;
 				
-				lastDigitIsNumeric = false;
-				// TODO: if tap operationals after final result, count with final result, set booleans lastDigitIsNumeric, dotPresence, resultIsNegative
-				// TODO: if tap numerics after final result, clean and start new expression
-				dotPresence = false;
-				resultIsNegative = false;
-				//finalResult = true;
-				
+				// if bracket is not closed, cut it out
 				if (bracketOpened) {
+					Log.d(TAG, "onClick: Opened");
 					int lastIndex = currentText.lastIndexOf("(");
 					if (lastIndex != -1) {
+						Log.d(TAG, "onClick: Opened1 " + lastIndex);
 						String beginString = currentText.substring(0, lastIndex);
 						String endString = currentText.substring(lastIndex + 1);
 						currentText = beginString + endString;
+						Log.d(TAG, "onClick: Opened2 " + currentText);
 					}
 				}
-				currentText = trimMathSignEnding(currentText);        // trim [+ - * /] endings
+				currentText = trimMathSignEnding(currentText);      // trim [+ - * /] endings
+				if (resultIsEmpty) {
+					Log.d(TAG, "onClick: OK");
+					break;
+				}
 				tv_historyDisplay.setText(currentText);
 				double result = Calculate.evaluate(currentText);    // evaluate expression
 				String resFormatted = cutFloatIfInteger(result);    // cut floating zero from integer
@@ -417,10 +414,21 @@ public class MainActivity extends Activity implements OnClickListener, View.OnTo
 				
 				//setSpannedText(resFormatted);
 				if (resFormatted.toLowerCase().equals("infinity")) {
-					tv_resultDisplay.setText("DIVISION BY ZERO  :)");
+					tv_resultDisplay.setText(R.string.divide_by_zero);
+					// TODO: dont work with this text as a result
+					// TODO: if number is very big (123E4) dont work with this text as a result
+					// TODO: set this text as a history and clear result and booleans
 				} else {
 					tv_resultDisplay.setText(resFormatted);
 				}
+				
+				// Reset booleans
+				lastDigitIsNumeric = false;
+				// TODO: if tap operationals after final result, count with final result, reset booleans lastDigitIsNumeric, dotPresence, resultIsNegative
+				// TODO: if tap numerics after final result, clean and start new expression
+				dotPresence = false;
+				resultIsNegative = false;
+				//finalResult = true;
 				
 				break;
 			
@@ -544,8 +552,12 @@ public class MainActivity extends Activity implements OnClickListener, View.OnTo
 	}
 	
 	private String trimMathSignEnding(String str) {
+		if (str.length() == 0) {
+			resultIsEmpty = true;
+			tv_resultDisplay.setText(getResources().getString(R.string.zero));
+			return str;
+		}
 		switch (str.charAt(str.length() - 1)) {
-			// FIXME: if result is ( and push = , app crashes
 			case '+':
 			case '-':
 			case '*':
@@ -558,9 +570,13 @@ public class MainActivity extends Activity implements OnClickListener, View.OnTo
 	
 }
 
-// TODO: move common buttons style to styles.xml Button.Numeric + other buttons
-// TODO: add apostrophes
-// TODO: lighten bg color or make all dark, lighten buttons color, bigger button numbers font size. Bigger display font size
+// TODO: when typing numbers after result is shown, don't concatenate, clear result text and booleans
+// TODO: if (last is closed bracket) add *: (5*8)9 -> (5*8) * 9
+// TODO: if text is 0. don't allow to add ( or remove .
+// TODO: number length 10 digits maximum. Try android:ems="10" (10 letters "M")
+// TODO: add little colons 1,000,000 or apostrophes
+// TODO: add backspace 'holded' listener
+// TODO: history show only last actions, e.g. 7 + 5 / 2
 // TODO: move utils function to UTILS class
 // TODO: lessen result font if viewport is small?
 // TODO: refactor all
