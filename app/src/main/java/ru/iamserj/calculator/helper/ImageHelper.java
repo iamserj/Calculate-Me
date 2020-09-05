@@ -1,9 +1,10 @@
-package ru.iamserj.calculator;
+package ru.iamserj.calculator.helper;
 
 import android.content.res.Resources;
 import android.graphics.*;
 import android.view.Display;
 import android.view.WindowManager;
+import ru.iamserj.calculator.R;
 
 /**
  * @author iamserj

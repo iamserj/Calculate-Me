@@ -1,11 +1,11 @@
-package ru.iamserj.calculator;
+package ru.iamserj.calculator.helper;
 
 /**
  * @author iamserj
  * 04.02.2019 23:36
  */
 
-public class Calculate {
+public class CalculationHelper {
 	
 	public static double evaluate(final String str) {
 		
