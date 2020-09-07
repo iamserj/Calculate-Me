@@ -32,8 +32,8 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 	private boolean bracketWithSignAdded = false;
 	private boolean lastDigitIsNumeric = true;
 	private boolean zeroWasAdded = false;
+	private boolean resultIsGiven = false;
 	
-	private ImageView iv_mainBackground;
 	private TextView tv_resultDisplay, tv_historyDisplay;
 	private String currentText;
 	
@@ -50,13 +50,14 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 			R.id.bt_fake_15, R.id.bt_fake_16, R.id.bt_fake_17, R.id.bt_fake_18, R.id.bt_fake_19};
 	
 	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
 		Bitmap bg = ImageHelper.CreateBitmapRoundCorner(getWindowManager(), getResources());
-		iv_mainBackground = findViewById(R.id.iv_mainBackground);
+		ImageView iv_mainBackground = findViewById(R.id.iv_mainBackground);
 		iv_mainBackground.setImageBitmap(bg);
 		bg = null;
 		
@@ -81,13 +82,13 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 		@Override
 		public void onClick(View view) {
 			if (view.getId() == R.id.tv_resultDisplay) {
-				/*if (resultIsEmpty || currentText) {
-					// TODO: if result is empty (0) or INFINITY, don't copy it
-				}*/
-				ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-				ClipData clip = ClipData.newPlainText("MyCalc Copied Result", currentText);
-				clipboard.setPrimaryClip(clip);
-				Toast.makeText(getApplicationContext(), "Result Copied", Toast.LENGTH_SHORT).show();
+				if (!resultIsEmpty && resultIsGiven) {
+					ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+					ClipData clip = ClipData.newPlainText("MyCalc Copied Result", currentText);
+					clipboard.setPrimaryClip(clip);
+					Toast.makeText(getApplicationContext(), "Result Copied", Toast.LENGTH_SHORT).show();
+				}
+				
 			}
 		}
 	};
@@ -128,8 +129,12 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 	
 	public void buttonClickListener(View view) {
 		
-		currentText = tv_resultDisplay.getText().toString();
-		currentText = currentText.replaceAll("\u00A0", "");     // remove no-break spaces
+		/*if (resultIsEmpty) {
+			currentText = "0";
+		} else {*/
+			currentText = tv_resultDisplay.getText().toString();
+			currentText = currentText.replaceAll("\u00A0", "");     // remove no-break spaces
+		//}
 		
 		int viewID = view.getId();
 		
@@ -150,6 +155,22 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 			}
 		}
 		
+		if (resultIsGiven) {
+			switch (viewID) {
+				case R.id.bt_backspace:
+				case R.id.bt_brackets:
+				case R.id.bt_invert:
+				case R.id.bt_clear:
+				case R.id.bt_dot:
+				case R.id.bt_add:
+				case R.id.bt_subtract:
+				case R.id.bt_multiply:
+				case R.id.bt_divide:
+					resultIsGiven = false;
+					break;
+			}
+		}
+		
 		if (viewID != R.id.bt_dot) {
 			zeroWasAdded = false;
 		}
@@ -158,45 +179,35 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 			
 			case R.id.bt_0:
 				if (!resultIsEmpty) {
-					setSpannedText(currentText + "0");
-					lastDigitIsNumeric = true;
+					typeNumber("0");
 				}
 				break;
 			case R.id.bt_1:
-				setSpannedText(currentText + "1");
-				lastDigitIsNumeric = true;
+				typeNumber("1");
 				break;
 			case R.id.bt_2:
-				setSpannedText(currentText + "2");
-				lastDigitIsNumeric = true;
+				typeNumber("2");
 				break;
 			case R.id.bt_3:
-				setSpannedText(currentText + "3");
-				lastDigitIsNumeric = true;
+				typeNumber("3");
 				break;
 			case R.id.bt_4:
-				setSpannedText(currentText + "4");
-				lastDigitIsNumeric = true;
+				typeNumber("4");
 				break;
 			case R.id.bt_5:
-				setSpannedText(currentText + "5");
-				lastDigitIsNumeric = true;
+				typeNumber("5");
 				break;
 			case R.id.bt_6:
-				setSpannedText(currentText + "6");
-				lastDigitIsNumeric = true;
+				typeNumber("6");
 				break;
 			case R.id.bt_7:
-				setSpannedText(currentText + "7");
-				lastDigitIsNumeric = true;
+				typeNumber("7");
 				break;
 			case R.id.bt_8:
-				setSpannedText(currentText + "8");
-				lastDigitIsNumeric = true;
+				typeNumber("8");
 				break;
 			case R.id.bt_9:
-				setSpannedText(currentText + "9");
-				lastDigitIsNumeric = true;
+				typeNumber("9");
 				break;
 			
 			// UTILS BUTTONS
@@ -234,6 +245,22 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 				operateEqual();
 				break;
 		}
+	}
+	
+	private void typeNumber(String s) {
+		boolean numberAfterBracket = checkNumberIsAfterBracket();
+		if (numberAfterBracket) {
+			setSpannedText(currentText + "*" + s);
+		} else {
+			setSpannedText(currentText + s);
+		}
+		lastDigitIsNumeric = true;
+		
+	}
+	
+	private boolean checkNumberIsAfterBracket() {
+		if (currentText.length() < 3) return false;
+		return currentText.charAt(currentText.length() - 1) == ')';
 	}
 	
 	
@@ -376,10 +403,7 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 	}
 	
 	private void operateClear() {                                                   // [CLEAR C]
-		lastDigitIsNumeric = false;
-		resultIsEmpty = true;
-		dotPresence = false;
-		// TODO: clean all conditions
+		resetBooleans();
 		//Log.d(TAG, "operateClear: " + currentText);
 		if (!currentText.equals("0")) {
 			tv_resultDisplay.setText(getResources().getString(R.string.zero));
@@ -390,7 +414,6 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 	}
 	
 	private void operateDot() {                                                     // [DOT .]
-		// TODO: check for dot presence in last number. E.g. after backspace use
 		if (dotPresence) {
 			if (currentText.endsWith(".")) {
 				dotPresence = false;
@@ -412,7 +435,6 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 			}
 			resultIsEmpty = false;
 		}
-		// TODO: don't allow dot after result is given
 	}
 	
 	
@@ -487,26 +509,30 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 		// cut showable result
 		
 		//setSpannedText(resFormatted);
-		if (resFormatted.toLowerCase().equals("infinity")) {
-			tv_resultDisplay.setText(R.string.divide_by_zero);
+		if (resFormatted.toLowerCase().equals("infinity") || resFormatted.toLowerCase().equals("nan")) {
+			tv_resultDisplay.setText("0");
+			tv_historyDisplay.setText(R.string.divide_infinity);
 			resetBooleans();
-			// TODO: dont work with this text as a result
-			// TODO: if number is very big (123E4) dont work with this text as a result
-			// TODO: set this text as a history and clear result and booleans
 		} else {
 			tv_resultDisplay.setText(resFormatted);
 		}
 		
 		// Reset booleans
-		lastDigitIsNumeric = false;
+		resultIsGiven = true;
+		lastDigitIsNumeric = true;
+		bracketOpened = false;
+		bracketWithSignAdded = false;
+		zeroWasAdded = false;
 		// TODO: if tap operationals after final result, count with final result, reset booleans lastDigitIsNumeric, dotPresence, resultIsNegative
 		// TODO: if tap numerics after final result, clean and start new expression
-		dotPresence = false;
+		// TODO: if number is very big (123E4) dont work with this text as a result
+		// TODO: 0/1 gives 0, don't allow to add numbers to the right side of 0
 		
 	}
 	
 	private void resetBooleans() {
 		resultIsEmpty = true;
+		resultIsGiven = false;
 		dotPresence = false;
 		bracketOpened = false;
 		bracketWithSignAdded = false;
@@ -623,7 +649,14 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 	private String cutFloatIfInteger(double result) {
 		// cut floating zero from integer
 		int j = (int) result;
-		return (result == j) ? String.valueOf(j) : String.valueOf(result);
+		if (result == j) {
+			dotPresence = false;
+			return String.valueOf(j);
+		} else {
+			dotPresence = true;
+			return String.valueOf(result);
+		}
+		
 		
 		
 	}
@@ -647,7 +680,7 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 	
 }
 
-// TODO: when typing numbers after result is shown, don't concatenate, clear result text and booleans
+// TODO: when typing numbers or ( or . or BSPACE and others after result is shown, don't concatenate, clear result text and booleans
 // TODO: if (last is closed bracket) add *: (5*8)9 -> (5*8) * 9
 // TODO: if text is 0. don't allow to add ( or remove .
 // TODO: number length 10 digits maximum. Try android:ems="10" (10 letters "M")

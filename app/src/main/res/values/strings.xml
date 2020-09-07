@@ -26,5 +26,6 @@
 	<string name="backspace">\u232b</string>
 	<string name="dot">.</string>
 	<string name="divide_by_zero">DIVISION BY ZERO  :)</string>
+	<string name="divide_infinity">infinity</string>
 
 </resources>
