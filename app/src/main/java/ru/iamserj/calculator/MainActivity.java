@@ -25,14 +25,15 @@ import ru.iamserj.calculator.helper.ImageHelper;
 public class MainActivity extends Activity implements View.OnTouchListener {
 	
 	private static final String TAG = "123456";
+	private static final String NO_BREAK_SPACE = "\u00A0";
 	
 	private boolean resultIsEmpty = true;
+	private boolean resultIsGiven = false;
 	private boolean dotPresence = false;
 	private boolean bracketOpened = false;
 	private boolean bracketWithSignAdded = false;
 	private boolean lastDigitIsNumeric = true;
 	private boolean zeroWasAdded = false;
-	private boolean resultIsGiven = false;
 	
 	private TextView tv_resultDisplay, tv_historyDisplay;
 	private String currentText;
@@ -48,7 +49,6 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 	private int[] fakeButtons = {R.id.bt_fake_0, R.id.bt_fake_1, R.id.bt_fake_2, R.id.bt_fake_3, R.id.bt_fake_4, R.id.bt_fake_5, R.id.bt_fake_6,
 			R.id.bt_fake_7, R.id.bt_fake_8, R.id.bt_fake_9, R.id.bt_fake_10, R.id.bt_fake_11, R.id.bt_fake_12, R.id.bt_fake_13, R.id.bt_fake_14,
 			R.id.bt_fake_15, R.id.bt_fake_16, R.id.bt_fake_17, R.id.bt_fake_18, R.id.bt_fake_19};
-	
 	
 	
 	@Override
@@ -84,9 +84,9 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 			if (view.getId() == R.id.tv_resultDisplay) {
 				if (!resultIsEmpty && resultIsGiven) {
 					ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-					ClipData clip = ClipData.newPlainText("MyCalc Copied Result", currentText);
+					ClipData clip = ClipData.newPlainText("CalculateMe_Label", currentText);
 					clipboard.setPrimaryClip(clip);
-					Toast.makeText(getApplicationContext(), "Result Copied", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext(), R.string.result_copied_message, Toast.LENGTH_LONG).show();
 				}
 				
 			}
@@ -102,14 +102,14 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 		
 		final String buttonTag = (String) view.getTag();
 		final int currentFakeButtonID = getResources().getIdentifier(buttonTag, "id", getPackageName());
-		final SquareButton currentFakeButton = (SquareButton) findViewById(currentFakeButtonID);
+		final SquareButton currentFakeButton = findViewById(currentFakeButtonID);
 		
 		if (action == MotionEvent.ACTION_DOWN) {
 			currentFakeButton.setVisibility(View.VISIBLE);
-			view.animate().scaleX(0.975f).setDuration(50).start();
-			view.animate().scaleY(0.975f).setDuration(50).start();
+			view.animate().scaleX(0.97f).setDuration(50).start();
+			view.animate().scaleY(0.97f).setDuration(50).start();
 			Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-			vibrator.vibrate(50);
+			vibrator.vibrate(75);
 			buttonClickListener(view);
 		} else if (action == MotionEvent.ACTION_UP) {
 			view.performClick();
@@ -129,12 +129,8 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 	
 	public void buttonClickListener(View view) {
 		
-		/*if (resultIsEmpty) {
-			currentText = "0";
-		} else {*/
-			currentText = tv_resultDisplay.getText().toString();
-			currentText = currentText.replaceAll("\u00A0", "");     // remove no-break spaces
-		//}
+		currentText = tv_resultDisplay.getText().toString();
+		currentText = currentText.replaceAll(NO_BREAK_SPACE, "");     // remove no-break spaces
 		
 		int viewID = view.getId();
 		
@@ -154,21 +150,32 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 					break;
 			}
 		}
-		
 		if (resultIsGiven) {
 			switch (viewID) {
-				case R.id.bt_backspace:
-				case R.id.bt_brackets:
-				case R.id.bt_invert:
-				case R.id.bt_clear:
-				case R.id.bt_dot:
-				case R.id.bt_add:
-				case R.id.bt_subtract:
-				case R.id.bt_multiply:
-				case R.id.bt_divide:
-					resultIsGiven = false;
+				case R.id.bt_0:
+					tv_historyDisplay.setText(tv_resultDisplay.getText().toString());
+					tv_resultDisplay.setText(getResources().getString(R.string.num_0));
+					resetBooleans();
+					break;
+				
+				case R.id.bt_1:
+				case R.id.bt_2:
+				case R.id.bt_3:
+				case R.id.bt_4:
+				case R.id.bt_5:
+				case R.id.bt_6:
+				case R.id.bt_7:
+				case R.id.bt_8:
+				case R.id.bt_9:
+					tv_historyDisplay.setText(tv_resultDisplay.getText().toString());
+					resultIsEmpty = false;
+					currentText = "";
 					break;
 			}
+		}
+		
+		if (resultIsGiven && viewID != R.id.bt_equal) {
+			resultIsGiven = false;
 		}
 		
 		if (viewID != R.id.bt_dot) {
@@ -271,12 +278,12 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 			resultIsEmpty = true;
 			bracketOpened = false;
 			dotPresence = false;
-			currentText = getResources().getString(R.string.zero);                  // set 0
+			currentText = getResources().getString(R.string.num_0);                  // set 0
 		} else if (currentText.length() > 1) {
 			//String negativeSymbol = getResources().getString(R.string.sub);       // subtraction sign
 			if (currentText.length() == 2 && checkNumberIsNegative()) {
 				resultIsEmpty = true;
-				currentText = getResources().getString(R.string.zero);              // set 0
+				currentText = getResources().getString(R.string.num_0);              // set 0
 			} else {
 				if (currentText.endsWith("."))
 					dotPresence = false;                 // remove dot
@@ -307,7 +314,7 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 				currentText = currentText.substring(0, currentText.length() - cutEnd);
 				if (currentText.length() == 0) {
 					resultIsEmpty = true;
-					tv_resultDisplay.setText(getResources().getString(R.string.zero));
+					tv_resultDisplay.setText(getResources().getString(R.string.num_0));
 				} else {
 					setSpannedText(currentText);
 				}
@@ -329,7 +336,6 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 			}
 		}
 		bracketOpened = !bracketOpened;
-		//Log.d("---------", bracketOpened+"");
 	}
 	
 	private void operateInvert() {                                                  // [INVERT +-]
@@ -344,23 +350,18 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 		
 		if (lastDigitIsNumeric) {
 			isNegative = checkNumberIsNegative();
-			Log.d(TAG, "operateInvert isNegative: " + isNegative);
 		}
 		
+		String lastNumber = getLastNumber();
+		int indexOfLastNumber = currentText.indexOf(lastNumber);
+		
 		if (isNegative) {
-			//currentText-getLastNumber-"-"+getLastNumber
-			String lastNumber = getLastNumber();
-			int indexOfLastNumber = currentText.indexOf(lastNumber);
+			// remove minus from last number
 			String currentTextWithoutLastNumberAndNegative = currentText.substring(0, indexOfLastNumber - 1);
 			setSpannedText(currentTextWithoutLastNumberAndNegative + lastNumber);
 		} else {
-			//currentText-getLastNumber+"-"+getLastNumber
-			String lastNumber = getLastNumber();
-			Log.d(TAG, "operateInvert lastNumber: " + lastNumber);
-			int indexOfLastNumber = currentText.indexOf(lastNumber);
-			Log.d(TAG, "operateInvert indexOfLastNumber: " + indexOfLastNumber);
+			// append minus to last number
 			String currentTextWithoutLastNumber = currentText.substring(0, indexOfLastNumber);
-			Log.d(TAG, "operateInvert currentTextWithoutLastNumber: " + currentTextWithoutLastNumber);
 			setSpannedText(currentTextWithoutLastNumber + "-" + lastNumber);
 		}
 		
@@ -368,19 +369,16 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 	
 	private boolean checkNumberIsNegative() {
 		if (!lastDigitIsNumeric) {
-			Log.d(TAG, "checkNumberIsNegative: case 1");
 			return false;
 		}
 		if (currentText.length() == 1) {
-			Log.d(TAG, "checkNumberIsNegative: case 2");
 			return false;
 		}
 		
 		String lastNumber = getLastNumber();
 		int lastNumberPosition = currentText.indexOf(lastNumber);
 		
-		if (lastNumberPosition == 0) {  // case "456", index 0, no negative sign
-			Log.d(TAG, "checkNumberIsNegative: case 3");
+		if (lastNumberPosition == 0) {  // case "12345", index 0, no negative sign
 			return false;
 		}
 		char previousSymbol = currentText.charAt(lastNumberPosition - 1);
@@ -391,7 +389,7 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 	private String getLastNumber() {
 		
 		String[] n = currentText.split("");     // array of strings
-		StringBuffer f = new StringBuffer();    // buffer to store numbers
+		StringBuilder f = new StringBuilder();  // buffer to store numbers
 		for (int i = n.length - 1; i >= 0; i--) {
 			if ((n[i].matches("[0-9]+"))) {     // validating numbers
 				f.insert(0, n[i]);              // add character
@@ -403,14 +401,13 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 	}
 	
 	private void operateClear() {                                                   // [CLEAR C]
-		resetBooleans();
-		//Log.d(TAG, "operateClear: " + currentText);
 		if (!currentText.equals("0")) {
-			tv_resultDisplay.setText(getResources().getString(R.string.zero));
+			tv_historyDisplay.setText(tv_resultDisplay.getText().toString());
+			tv_resultDisplay.setText("0");
 		} else {
 			tv_historyDisplay.setText("");
 		}
-		
+		resetBooleans();
 	}
 	
 	private void operateDot() {                                                     // [DOT .]
@@ -488,47 +485,42 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 	}
 	
 	private void operateEqual() {                                                   // [EQUAL =]
-		// if bracket is not closed, cut it out
+		
 		if (bracketOpened) {
-			Log.d(TAG, "onClick: Opened");
-			int lastIndex = currentText.lastIndexOf("(");
-			if (lastIndex != -1) {
-				Log.d(TAG, "onClick: Opened1 " + lastIndex);
-				String beginString = currentText.substring(0, lastIndex);
-				String endString = currentText.substring(lastIndex + 1);
-				currentText = beginString + endString;
-				Log.d(TAG, "onClick: Opened2 " + currentText);
-			}
+			currentText = trimOpenBracket(currentText);     // trim single opening bracket [(]
 		}
 		currentText = trimMathSignEnding(currentText);      // trim [+ - * /] endings
 		tv_historyDisplay.setText(currentText);
+		
 		double result = CalculationHelper.evaluate(currentText);    // evaluate expression
-		String resFormatted = cutFloatIfInteger(result);    // cut floating zero from integer
+		String resultString = cutFloatIfInteger(result);            // cut floating zero, if result is integer
+		String resultStringLC = resultString.toLowerCase();
 		
-		// save real result
-		// cut showable result
+		tv_resultDisplay.setText("0");
+		resetBooleans();
 		
-		//setSpannedText(resFormatted);
-		if (resFormatted.toLowerCase().equals("infinity") || resFormatted.toLowerCase().equals("nan")) {
-			tv_resultDisplay.setText("0");
-			tv_historyDisplay.setText(R.string.divide_infinity);
-			resetBooleans();
-		} else {
-			tv_resultDisplay.setText(resFormatted);
+		if (result == 0) {
+			return;
 		}
 		
-		// Reset booleans
-		resultIsGiven = true;
-		lastDigitIsNumeric = true;
-		bracketOpened = false;
-		bracketWithSignAdded = false;
-		zeroWasAdded = false;
-		// TODO: if tap operationals after final result, count with final result, reset booleans lastDigitIsNumeric, dotPresence, resultIsNegative
-		// TODO: if tap numerics after final result, clean and start new expression
-		// TODO: if number is very big (123E4) dont work with this text as a result
-		// TODO: 0/1 gives 0, don't allow to add numbers to the right side of 0
+		if (result > 999_999_999 || resultStringLC.contains("e")) {
+			// FIXME: sometimes it doesn't work properly!
+			tv_historyDisplay.setText(R.string.show_result_too_large);
+			return;
+		}
 		
+		if (resultStringLC.equals(getString(R.string.result_case_infinity)) || resultStringLC.equals(getString(R.string.result_case_nan))) {
+			tv_historyDisplay.setText(R.string.show_result_infinity);
+			return;
+		}
+		
+		// normal case
+		resultIsEmpty = false;
+		resultIsGiven = true;
+		dotPresence = resultString.indexOf('.') != -1;
+		tv_resultDisplay.setText(resultString);
 	}
+	
 	
 	private void resetBooleans() {
 		resultIsEmpty = true;
@@ -558,15 +550,13 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 	private void setSpannedText(String str) {
 		tv_resultDisplay.setText("");
 		
-		//str = str.replaceAll("\u00A0","");
-		int count = 0;
 		for (int i = 0; i < str.length(); i++) {
 			switch (str.charAt(i)) {
 				case '+':
 				case '-':
 				case '*':
 				case '/':
-					Spannable spacing = new SpannableString("\u00A0");
+					Spannable spacing = new SpannableString(NO_BREAK_SPACE);
 					spacing.setSpan(new RelativeSizeSpan(0.5f), 0, spacing.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 					tv_resultDisplay.append(spacing);
 					
@@ -582,67 +572,6 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 			}
 		}
 		
-		// TODO:
-		// if result is very long, trim it to less digits + E
-		// if entered number is very long, don't allow to enter (if trying to enter new number, return operation)
-		
-		// On entry set max digits = 10 symb
-		
-		
-		// If you just want to use AWT, then use Graphics.getFontMetrics (optionally specifying the font, for a non-default one) to get a FontMetrics
-		// then FontMetrics.stringWidth to find the width for the specified string.
-		
-		// 1) get currentText width
-/*		Graphics g;
-		String s = textDisplay.getText().toString();
-		int textWidth = g.getFontMetrics().stringWidth(s);
-
-		int textDisplayWidth;
-
-		// 2) get result view width
-		LinearLayout layout = (LinearLayout)findViewById(R.id.YOUD VIEW ID);
-		ViewTreeObserver vto = layout.getViewTreeObserver();
-		//if (viewTreeObserver.isAlive()) {
-		vto.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-		//vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-			@Override
-			public void onGlobalLayout() {
-				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-					this.layout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-				} else {
-					this.layout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-				}
-				// textDisplayWidth = layout.getWidth();
-				textDisplayWidth = layout.getMeasuredWidth();
-			}
-		});
-		//}
-*/
-
-		/*
-
-		yourView.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				yourView.invalidate();
-				System.out.println("Width = " + yourView.getWidth());
-			}
-		}, 1);
-
-		*/
-
-
-	/*	if (textWidth > textDisplayWidth) {				// text doesn't fit
-			//			a) align text to left side
-			//			b) cut tail
-
-		} else {
-			//			a) align text to right side
-			//			b) block exceed user entry
-
-		}
-
-	*/
 	}
 	
 	
@@ -656,15 +585,22 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 			dotPresence = true;
 			return String.valueOf(result);
 		}
-		
-		
-		
+	}
+	
+	private String trimOpenBracket(String str) {
+		int lastIndex = str.lastIndexOf("(");
+		if (lastIndex != -1) {
+			String beginString = str.substring(0, lastIndex);
+			String endString = str.substring(lastIndex + 1);
+			str = beginString + endString;
+		}
+		return str;
 	}
 	
 	private String trimMathSignEnding(String str) {
 		if (str.length() == 0) {
 			resultIsEmpty = true;
-			tv_resultDisplay.setText(getResources().getString(R.string.zero));
+			tv_resultDisplay.setText(getResources().getString(R.string.num_0));
 			return str;
 		}
 		switch (str.charAt(str.length() - 1)) {
@@ -680,15 +616,18 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 	
 }
 
-// TODO: when typing numbers or ( or . or BSPACE and others after result is shown, don't concatenate, clear result text and booleans
-// TODO: if (last is closed bracket) add *: (5*8)9 -> (5*8) * 9
+// TODO: when typing [.] after result is given, don't concatenate, clear result and booleans
 // TODO: if text is 0. don't allow to add ( or remove .
-// TODO: number length 10 digits maximum. Try android:ems="10" (10 letters "M")
+// TODO: on digits entering set max digits = 9 symbols. Try android:ems="9" (9 letters "M")
 // TODO: add little colons 1,000,000 or apostrophes
-// TODO: add backspace 'holded' listener
-// TODO: history show only last actions, e.g. 7 + 5 / 2
-// TODO: move utils function to UTILS class
-// TODO: lessen result font if viewport is small?
-// TODO: отделить единицу пробелом, как в электронике
+// TODO: cut floating double tail to viewable text, e.g. 3.6666666666666666666
+// TODO: add backspace 'holded state' listener
+// TODO: separate [1] with a space, as in electronics
+
 // TODO: refactor all
-// TODO: clean comments, Logs
+// TODO: move utils function to static UTILS class
+// TODO: clean comments, Logs, TODOs, FIXMEs
+
+// FIXME: error [5] [+] [(] [-] [+-] ---> -
+
+// final line

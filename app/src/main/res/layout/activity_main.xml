@@ -72,7 +72,7 @@
 					android:paddingBottom="8dp"
 					android:scrollHorizontally="true"
 					android:singleLine="true"
-					android:text="@string/zero"
+					android:text="@string/num_0"
 					android:textColor="@color/display_result_black"
 					android:textSize="@dimen/display_result_text_size"
 					tools:text="0123456" />
@@ -132,17 +132,17 @@
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_fake_4"
 							style="@style/Button.Background"
-							android:text="@string/seven" />
+							android:text="@string/num_7" />
 
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_fake_5"
 							style="@style/Button.Background"
-							android:text="@string/eight" />
+							android:text="@string/num_8" />
 
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_fake_6"
 							style="@style/Button.Background"
-							android:text="@string/nine" />
+							android:text="@string/num_9" />
 
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_fake_7"
@@ -160,17 +160,17 @@
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_fake_8"
 							style="@style/Button.Background"
-							android:text="@string/four" />
+							android:text="@string/num_4" />
 
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_fake_9"
 							style="@style/Button.Background"
-							android:text="@string/five" />
+							android:text="@string/num_5" />
 
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_fake_10"
 							style="@style/Button.Background"
-							android:text="@string/six" />
+							android:text="@string/num_6" />
 
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_fake_11"
@@ -188,17 +188,17 @@
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_fake_12"
 							style="@style/Button.Background"
-							android:text="@string/one" />
+							android:text="@string/num_1" />
 
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_fake_13"
 							style="@style/Button.Background"
-							android:text="@string/two" />
+							android:text="@string/num_2" />
 
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_fake_14"
 							style="@style/Button.Background"
-							android:text="@string/three" />
+							android:text="@string/num_3" />
 
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_fake_15"
@@ -216,7 +216,7 @@
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_fake_16"
 							style="@style/Button.Background"
-							android:text="@string/zero" />
+							android:text="@string/num_0" />
 
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_fake_17"
@@ -289,19 +289,19 @@
 							android:id="@+id/bt_7"
 							style="@style/Button.Numeric"
 							android:tag="bt_fake_4"
-							android:text="@string/seven" />
+							android:text="@string/num_7" />
 
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_8"
 							style="@style/Button.Numeric"
 							android:tag="bt_fake_5"
-							android:text="@string/eight" />
+							android:text="@string/num_8" />
 
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_9"
 							style="@style/Button.Numeric"
 							android:tag="bt_fake_6"
-							android:text="@string/nine" />
+							android:text="@string/num_9" />
 
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_multiply"
@@ -321,19 +321,19 @@
 							android:id="@+id/bt_4"
 							style="@style/Button.Numeric"
 							android:tag="bt_fake_8"
-							android:text="@string/four" />
+							android:text="@string/num_4" />
 
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_5"
 							style="@style/Button.Numeric"
 							android:tag="bt_fake_9"
-							android:text="@string/five" />
+							android:text="@string/num_5" />
 
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_6"
 							style="@style/Button.Numeric"
 							android:tag="bt_fake_10"
-							android:text="@string/six" />
+							android:text="@string/num_6" />
 
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_subtract"
@@ -353,19 +353,19 @@
 							android:id="@+id/bt_1"
 							style="@style/Button.Numeric"
 							android:tag="bt_fake_12"
-							android:text="@string/one" />
+							android:text="@string/num_1" />
 
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_2"
 							style="@style/Button.Numeric"
 							android:tag="bt_fake_13"
-							android:text="@string/two" />
+							android:text="@string/num_2" />
 
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_3"
 							style="@style/Button.Numeric"
 							android:tag="bt_fake_14"
-							android:text="@string/three" />
+							android:text="@string/num_3" />
 
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_add"
@@ -385,7 +385,7 @@
 							android:id="@+id/bt_0"
 							style="@style/Button.Numeric"
 							android:tag="bt_fake_16"
-							android:text="@string/zero" />
+							android:text="@string/num_0" />
 
 					<ru.iamserj.calculator.SquareButton
 							android:id="@+id/bt_dot"

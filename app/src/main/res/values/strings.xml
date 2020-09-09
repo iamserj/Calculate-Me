@@ -3,16 +3,16 @@
 
 	<string name="metallic_background">Metallic background</string>
 
-	<string name="zero">0</string>
-	<string name="one">1</string>
-	<string name="two">2</string>
-	<string name="three">3</string>
-	<string name="four">4</string>
-	<string name="five">5</string>
-	<string name="six">6</string>
-	<string name="seven">7</string>
-	<string name="eight">8</string>
-	<string name="nine">9</string>
+	<string name="num_0">0</string>
+	<string name="num_1">1</string>
+	<string name="num_2">2</string>
+	<string name="num_3">3</string>
+	<string name="num_4">4</string>
+	<string name="num_5">5</string>
+	<string name="num_6">6</string>
+	<string name="num_7">7</string>
+	<string name="num_8">8</string>
+	<string name="num_9">9</string>
 
 	<string name="mul">\u00D7</string>
 	<string name="sub">\u2013</string>
@@ -25,7 +25,12 @@
 	<string name="clear">C</string>
 	<string name="backspace">\u232b</string>
 	<string name="dot">.</string>
-	<string name="divide_by_zero">DIVISION BY ZERO  :)</string>
-	<string name="divide_infinity">infinity</string>
+
+	<string name="result_case_infinity">infinity</string>
+	<string name="result_case_nan">nan</string>
+	<string name="show_result_infinity">infinity</string>
+	<string name="show_result_too_large">result is very large!</string>
+	<string name="result_copied_message">Your result has been copied.</string>
+
 
 </resources>
