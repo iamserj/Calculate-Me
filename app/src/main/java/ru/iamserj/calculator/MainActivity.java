@@ -154,10 +154,15 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 			}
 		}
 		if (resultIsGiven) {
+			Log.d(TAG, "buttonClickListener: result is given");
 			switch (viewID) {
+				
 				case R.id.bt_0:
+				case R.id.bt_dot:
+					Log.d(TAG, "buttonClickListener: case 0 or dot");
 					tv_historyDisplay.setText(tv_resultDisplay.getText().toString());
 					tv_resultDisplay.setText(getResources().getString(R.string.num_0));
+					currentText = "0";
 					resetBooleans();
 					break;
 				
@@ -510,14 +515,14 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 			return;
 		}
 		
-		if (Math.abs(result) > 999_999_999 || resultStringLC.contains("e")) {
-			// FIXME: sometimes it doesn't work properly?
-			tv_historyDisplay.setText(R.string.show_result_too_large);
+		if (resultStringLC.equals(getString(R.string.result_case_infinity)) || resultStringLC.equals(getString(R.string.result_case_nan))) {
+			tv_historyDisplay.setText(R.string.show_result_infinity);
 			return;
 		}
 		
-		if (resultStringLC.equals(getString(R.string.result_case_infinity)) || resultStringLC.equals(getString(R.string.result_case_nan))) {
-			tv_historyDisplay.setText(R.string.show_result_infinity);
+		if (Math.abs(result) > 999_999_999 || resultStringLC.contains("e")) {
+			// FIXME: sometimes it doesn't work properly?
+			tv_historyDisplay.setText(R.string.show_result_too_large);
 			return;
 		}
 		
@@ -623,11 +628,9 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 	
 }
 
-// TODO: when typing [.] after result is given, don't concatenate, clear result and booleans
-// TODO: if text is 0. don't allow to add [(]. Or remove dot.
 // TODO: on digits entering set max digits = 9 symbols. Try android:ems="9" (9 letters "M")
 // TODO: add little colons 1,000,000 or apostrophes
-// TODO: cut floating double tail to viewable text, e.g. 3.6666666666666666666
+// TODO: cut floating double tail to viewable text, e.g. 3.6666666666666666666. 1) find viewable tail 2) round it
 // TODO: add backspace 'holded state' listener
 // TODO: separate [1] with a space, as in electronics
 
@@ -636,6 +639,10 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 // TODO: clean comments, Logs, TODOs, FIXMEs
 
 // FIXME:
+// [.][(] -> 0.(
 // [.][3][bsp][bsp][5] -> 05
 // [3][-][8][+-] -> 38
+// [(][.][+-] -> crash
+// [.][(][+-][5] -> 05
+
 // final line
