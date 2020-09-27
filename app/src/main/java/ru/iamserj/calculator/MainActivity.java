@@ -22,6 +22,8 @@ import android.widget.Toast;
 import ru.iamserj.calculator.helper.CalculationHelper;
 import ru.iamserj.calculator.helper.ImageHelper;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,6 +31,7 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 	
 	private static final String TAG = "123456";
 	private static final String NO_BREAK_SPACE = "\u00A0";
+	private static final int MAX_NUMBER = 999_999_999;
 	
 	private boolean resultIsEmpty = true;
 	private boolean resultIsGiven = false;
@@ -263,6 +266,12 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 	}
 	
 	private void typeNumber(String s) {
+		if (lastDigitIsNumeric) {
+			Log.d(TAG, "typeNumber: " + getLastNumber());
+			boolean numberIsTooLarge = getLastNumber().length() >= String.valueOf(MAX_NUMBER).length();
+			if (numberIsTooLarge) return;
+		}
+		
 		boolean numberAfterBracket = checkNumberIsAfterBracket();
 		if (numberAfterBracket) {
 			setSpannedText(currentText + "*" + s);
@@ -520,7 +529,7 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 			return;
 		}
 		
-		if (Math.abs(result) > 999_999_999 || resultStringLC.contains("e")) {
+		if (Math.abs(result) > MAX_NUMBER || resultStringLC.contains("e")) {
 			// FIXME: sometimes it doesn't work properly?
 			tv_historyDisplay.setText(R.string.show_result_too_large);
 			return;
@@ -530,7 +539,31 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 		resultIsEmpty = false;
 		resultIsGiven = true;
 		dotPresence = resultString.indexOf('.') != -1;
+		
+		if (dotPresence) {
+			// 348729847.234234
+			int integerSize = resultString.indexOf('.');
+			int maxResultSize = String.valueOf(MAX_NUMBER).length();
+			int decimalSize = maxResultSize - integerSize;
+			
+			if (decimalSize == 0) {             // decimal size = 0
+				result = Math.round(result);
+			} else {                            // decimal size = 1..8
+				result = roundDoubleToPlaces(result, decimalSize);
+			}
+			
+			resultString = cutFloatIfInteger(result);
+		}
+		
 		tv_resultDisplay.setText(resultString);
+	}
+	
+	private double roundDoubleToPlaces(double value, int places) {
+		if (places < 0) throw new IllegalArgumentException();
+		
+		BigDecimal bd = BigDecimal.valueOf(value);
+		bd = bd.setScale(places, RoundingMode.HALF_UP);
+		return bd.doubleValue();
 	}
 	
 	
@@ -628,9 +661,7 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 	
 }
 
-// TODO: on digits entering set max digits = 9 symbols. Try android:ems="9" (9 letters "M")
 // TODO: add little colons 1,000,000 or apostrophes
-// TODO: cut floating double tail to viewable text, e.g. 3.6666666666666666666. 1) find viewable tail 2) round it
 // TODO: add backspace 'holded state' listener
 // TODO: separate [1] with a space, as in electronics
 
