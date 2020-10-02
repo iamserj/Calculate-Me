@@ -1,6 +1,5 @@
 package ru.iamserj.calculator;
 
-
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -13,7 +12,6 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,10 +20,8 @@ import android.widget.Toast;
 import ru.iamserj.calculator.helper.CalculationHelper;
 import ru.iamserj.calculator.helper.ImageHelper;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import static ru.iamserj.calculator.helper.NumericHelper.roundDoubleToSpecifiedDecimalPlaces;
+import static ru.iamserj.calculator.helper.StringHelper.*;
 
 public class MainActivity extends Activity implements View.OnTouchListener {
 	
@@ -93,10 +89,10 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 					clipboard.setPrimaryClip(clip);
 					Toast.makeText(getApplicationContext(), R.string.result_copied_message, Toast.LENGTH_LONG).show();
 				}
-				
 			}
 		}
 	};
+	
 	
 	@Override
 	public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -118,7 +114,6 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 			buttonClickListener(view);
 		} else if (action == MotionEvent.ACTION_UP) {
 			view.performClick();
-			//view.animate().cancel();
 			view.animate().scaleX(1f).setDuration(100).start();
 			view.animate().scaleY(1f).setDuration(100).start();
 			new android.os.Handler().postDelayed(new Runnable() {
@@ -131,14 +126,10 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 		return true;
 	}
 	
-	
 	public void buttonClickListener(View view) {
-		
 		currentText = tv_resultDisplay.getText().toString();
 		currentText = currentText.replaceAll(NO_BREAK_SPACE, "");     // remove no-break spaces
-		
 		int viewID = view.getId();
-		
 		if (resultIsEmpty) {
 			switch (viewID) {
 				case R.id.bt_1:
@@ -156,12 +147,10 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 			}
 		}
 		if (resultIsGiven) {
-			Log.d(TAG, "buttonClickListener: result is given");
 			switch (viewID) {
 				
 				case R.id.bt_0:
 				case R.id.bt_dot:
-					Log.d(TAG, "buttonClickListener: case 0 or dot");
 					tv_historyDisplay.setText(tv_resultDisplay.getText().toString());
 					tv_resultDisplay.setText("0");
 					currentText = "0";
@@ -182,10 +171,9 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 					currentText = "";
 					break;
 			}
-		}
-		
-		if (resultIsGiven && viewID != R.id.bt_equal) {
-			resultIsGiven = false;
+			if (viewID != R.id.bt_equal) {
+				resultIsGiven = false;
+			}
 		}
 		
 		if (viewID != R.id.bt_dot) {
@@ -193,7 +181,7 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 		}
 		
 		switch (viewID) {
-			
+			// NUMERIC BUTTONS
 			case R.id.bt_0:
 				if (!resultIsEmpty) {
 					typeNumber("0");
@@ -246,16 +234,16 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 			
 			// OPERATION BUTTONS
 			case R.id.bt_add:
-				operateAdd();
+				operateMath("+");
 				break;
 			case R.id.bt_subtract:
-				operateSubtract();
+				operateMath("-");
 				break;
 			case R.id.bt_multiply:
-				operateMultiply();
+				operateMath("*");
 				break;
 			case R.id.bt_divide:
-				operateDivide();
+				operateMath("/");
 				break;
 			
 			case R.id.bt_equal:
@@ -266,13 +254,10 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 	
 	private void typeNumber(String s) {
 		if (lastDigitIsNumeric) {
-			Log.d(TAG, "typeNumber: " + getLastNumber());
-			boolean numberIsTooLarge = getLastNumber().length() >= String.valueOf(MAX_NUMBER).length();
+			boolean numberIsTooLarge = getLastNumber(currentText).length() >= String.valueOf(MAX_NUMBER).length();
 			if (numberIsTooLarge) return;
 		}
-		
-		boolean numberAfterBracket = checkNumberIsAfterBracket();
-		if (numberAfterBracket) {
+		if (checkLastCharIsClosingBracket()) {
 			setSpannedText(currentText + "*" + s);
 		} else {
 			setSpannedText(currentText + s);
@@ -280,20 +265,18 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 		lastDigitIsNumeric = true;
 	}
 	
-	private boolean checkNumberIsAfterBracket() {
-		if (currentText.length() < 3) return false;
+	private boolean checkLastCharIsClosingBracket() {
+		if (currentText.length() == 0) return false;
 		return currentText.charAt(currentText.length() - 1) == ')';
 	}
 	
-	
 	private void operateBackspace() {                                               // [BACKSPACE]
 		if (resultIsEmpty) return;
-		
 		if (currentText.length() == 1) {
 			resetBooleans();
 			currentText = "0";
 		} else if (currentText.length() > 1) {
-			if (currentText.length() == 2 && checkNumberIsNegative()) {
+			if (currentText.length() == 2 && checkLastNumberIsNegative(currentText)) {
 				resetBooleans();
 				currentText = "0";
 			} else {
@@ -314,7 +297,7 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 					currentText = "0";
 				}
 				
-				lastDigitIsNumeric = Character.isDigit(currentText.charAt(currentText.length() - 1));
+				lastDigitIsNumeric = checkLastCharIsNumeric(currentText);
 			}
 		}
 		setSpannedText(currentText);
@@ -330,7 +313,7 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 		}
 		
 		if (bracketOpened) {
-			if (currentText.endsWith("(")) {                    // case "(" + ")"
+			if (currentText.endsWith("(")) {                    // case [(]+[)]
 				int cutEnd = bracketWithSignAdded ? 2 : 1;      // number of digits to cut from end
 				currentText = currentText.substring(0, currentText.length() - cutEnd);
 				if (currentText.length() == 0) {
@@ -340,9 +323,9 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 					setSpannedText(currentText);
 				}
 				bracketWithSignAdded = false;
-			} else if (!lastDigitIsNumeric) {                   // case (3+)
+			} else if (!lastDigitIsNumeric) {                   // case [5]+[*]+[)]
 				return;
-			} else {                                            // normal case (3+2)
+			} else {                                            // normal case [(]+[3]+[*]+[2]+[)]
 				setSpannedText(currentText + ")");
 				bracketWithSignAdded = false;
 				lastDigitIsNumeric = false;
@@ -364,18 +347,17 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 	}
 	
 	private void operateInvert() {                                                  // [INVERT +-]
-		if (resultIsEmpty || !lastDigitIsNumeric) return;
-		
-		Log.d(TAG, "operateInvert: " + resultIsEmpty + " " + lastDigitIsNumeric);
-		
-		boolean isNegative = checkNumberIsNegative();
-		String lastNumber = getLastNumber();
+		if (resultIsEmpty || !lastDigitIsNumeric) {
+			return;
+		}
+		boolean isNegative = checkLastNumberIsNegative(currentText);
+		String lastNumber = getLastNumber(currentText);
 		int indexOfLastNumber = currentText.lastIndexOf(lastNumber);
 		
 		if (isNegative) {
 			// remove minus from last number
 			currentText = currentText.substring(0, indexOfLastNumber - 1);
-			if (currentText.length() > 0 && Character.isDigit(currentText.charAt(currentText.length() - 1))) {
+			if (currentText.length() > 0 && checkLastCharIsNumeric(currentText)) {
 				// if numeric before minus, do nothing
 				return;
 			}
@@ -383,41 +365,8 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 		} else {
 			// append minus to last number
 			currentText = currentText.substring(0, indexOfLastNumber);
-			Log.d(TAG, "operateInvert: 2 " + currentText);
 			setSpannedText(currentText + "-" + lastNumber);
 		}
-		
-	}
-	
-	private boolean checkNumberIsNegative() {
-		if (!lastDigitIsNumeric) {
-			return false;
-		}
-		if (currentText.length() == 1) {
-			return false;
-		}
-		
-		String lastNumber = getLastNumber();
-		Log.d(TAG, "checkNumberIsNegative: " + lastNumber);
-		int lastNumberPosition = currentText.lastIndexOf(lastNumber);
-		
-		if (lastNumberPosition == 0) {  // case "12345", index 0, no negative sign
-			return false;
-		}
-		char previousSymbol = currentText.charAt(lastNumberPosition - 1);
-		Log.d(TAG, "checkNumberIsNegative: prev symol " + previousSymbol);
-		return previousSymbol == '-';
-	}
-	
-	private String getLastNumber() {
-		
-		Matcher m = Pattern.compile("(?!=\\d\\.\\d\\.)([\\d.]+)").matcher(currentText);
-		double result = 0;
-		while (m.find()) {
-			result = Double.parseDouble(m.group(1));
-		}
-		
-		return cutFloatIfInteger(result);
 	}
 	
 	private void operateClear() {                                                   // [CLEAR C]
@@ -448,75 +397,40 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 				setSpannedText(currentText + ".");
 			} else {
 				zeroWasAdded = true;
-				setSpannedText(currentText + "0.");        // allows dot after operational sign. 5+. -> 5+0.
+				setSpannedText(currentText + "0.");        // allows dot after operational sign. [5]+[-]+[.] -> 5 - 0.
 			}
 			resultIsEmpty = false;
 		}
 	}
 	
-	
-	private void operateAdd() {                                                     // [ADD +]
-		if (bracketOpened && currentText.endsWith("(")) return;
+	private void operateMath(String mathSign) {                                     // [MATH + - * /]
+		switch (mathSign) {
+			case "+":
+			case "*":
+			case "/":
+				if (bracketOpened && currentText.endsWith("(")) return;
+		}
 		currentText = removeDotIfInTheEnd(currentText);
+		currentText = removeMathSignEnding(currentText);
 		lastDigitIsNumeric = false;
-		
-		if (resultIsEmpty) {
-			resultIsEmpty = false;
-		}
+		resultIsEmpty = false;
 		dotPresence = false;
-		addOperationSign("+");
-	}
-	
-	private String removeDotIfInTheEnd(String _currentText) {
-		if (_currentText.endsWith(".")) {
-			return _currentText.substring(0, _currentText.length() - 1);
-		} else {
-			return _currentText;
-		}
-	}
-	
-	private void operateSubtract() {                                                // [SUBTRACT -]
-		currentText = removeDotIfInTheEnd(currentText);
-		lastDigitIsNumeric = false;
-		if (resultIsEmpty) {
-			resultIsEmpty = false;
-		}
-		dotPresence = false;
-		addOperationSign("-");
-	}
-	
-	private void operateMultiply() {                                                // [MULTIPLY *]
-		if (bracketOpened && currentText.endsWith("(")) return;
-		currentText = removeDotIfInTheEnd(currentText);
-		lastDigitIsNumeric = false;
-		if (resultIsEmpty) {
-			resultIsEmpty = false;
-		}
-		dotPresence = false;
-		addOperationSign("*");
-	}
-	
-	private void operateDivide() {                                                  // [DIVIDE /]
-		if (bracketOpened && currentText.endsWith("(")) return;
-		currentText = removeDotIfInTheEnd(currentText);
-		lastDigitIsNumeric = false;
-		if (resultIsEmpty) {
-			resultIsEmpty = false;
-		}
-		dotPresence = false;
-		addOperationSign("/");
+		setSpannedText(currentText + mathSign);
 	}
 	
 	private void operateEqual() {                                                   // [EQUAL =]
-		
 		if (bracketOpened) {
-			currentText = trimOpenBracket(currentText);     // trim single opening bracket [(]
+			currentText = removeLastSpecifiedCharacter(currentText, '(');
 		}
-		currentText = trimMathSignEnding(currentText);      // trim [+ - * /] endings
+		currentText = removeDotIfInTheEnd(currentText);
+		currentText = removeMathSignEnding(currentText);
+		
+		if (currentText.length() == 0) currentText = "0";
+		
 		tv_historyDisplay.setText(currentText);
 		
-		double result = CalculationHelper.evaluate(currentText);    // evaluate expression
-		String resultString = cutFloatIfInteger(result);            // cut floating zero, if result is integer
+		double result = CalculationHelper.evaluate(currentText);        // evaluate expression
+		String resultString = removeFractionalPartIfInteger(result);    // cut floating zero, if result is integer
 		String resultStringLC = resultString.toLowerCase();
 		
 		tv_resultDisplay.setText("0");
@@ -542,29 +456,14 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 		dotPresence = resultString.indexOf('.') != -1;
 		
 		if (dotPresence) {
-			// 348729847.234234
 			int integerSize = resultString.indexOf('.');
 			int maxResultSize = String.valueOf(MAX_NUMBER).length();
 			int decimalSize = maxResultSize - integerSize;
-			
-			if (decimalSize == 0) {             // decimal size = 0
-				result = Math.round(result);
-			} else {                            // decimal size = 1..8
-				result = roundDoubleToPlaces(result, decimalSize);
-			}
-			
-			resultString = cutFloatIfInteger(result);
+			result = roundDoubleToSpecifiedDecimalPlaces(result, decimalSize);
+			resultString = removeFractionalPartIfInteger(result);
 		}
 		
 		tv_resultDisplay.setText(resultString);
-	}
-	
-	private double roundDoubleToPlaces(double value, int places) {
-		if (places < 0) throw new IllegalArgumentException();
-		
-		BigDecimal bd = BigDecimal.valueOf(value);
-		bd = bd.setScale(places, RoundingMode.HALF_UP);
-		return bd.doubleValue();
 	}
 	
 	
@@ -578,20 +477,6 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 		zeroWasAdded = false;
 	}
 	
-	
-	private void addOperationSign(String sign) {
-		char lastSymbol = currentText.charAt(currentText.length() - 1);
-		
-		switch (lastSymbol) {
-			case '+':
-			case '-':
-			case '*':
-			case '/':
-				currentText = currentText.substring(0, currentText.length() - 1);
-				break;
-		}
-		setSpannedText(currentText + sign);
-	}
 	
 	private void setSpannedText(String str) {
 		tv_resultDisplay.setText("");
@@ -617,59 +502,10 @@ public class MainActivity extends Activity implements View.OnTouchListener {
 					tv_resultDisplay.append(String.valueOf(str.charAt(i)));
 			}
 		}
-		
 	}
-	
-	
-	private String cutFloatIfInteger(double result) {
-		// cut floating zero from integer
-		int j = (int) result;
-		if (result == j) {
-			dotPresence = false;
-			return String.valueOf(j);
-		} else {
-			dotPresence = true;
-			return String.valueOf(result);
-		}
-	}
-	
-	private String trimOpenBracket(String str) {
-		int lastIndex = str.lastIndexOf("(");
-		if (lastIndex != -1) {
-			String beginString = str.substring(0, lastIndex);
-			String endString = str.substring(lastIndex + 1);
-			str = beginString + endString;
-		}
-		return str;
-	}
-	
-	private String trimMathSignEnding(String str) {
-		if (str.length() == 0) {
-			resultIsEmpty = true;
-			tv_resultDisplay.setText("0");
-			return str;
-		}
-		switch (str.charAt(str.length() - 1)) {
-			case '+':
-			case '-':
-			case '*':
-			case '/':
-				str = str.substring(0, str.length() - 1);
-				break;
-		}
-		return str;
-	}
-	
 }
-
 
 // Possible improvements:
 // * add little apostrophes 1'000'000
 // * add backspace 'holded state' listener
 // * separate [1] with a space, as in electronics
-
-// TODO: move utils function to static UTILS classes
-// TODO: refactor all
-// TODO: clean comments, Logs, TODOs, FIXMEs
-
-// final line

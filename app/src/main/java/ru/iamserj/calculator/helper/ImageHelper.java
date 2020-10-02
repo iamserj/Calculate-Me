@@ -6,10 +6,6 @@ import android.view.Display;
 import android.view.WindowManager;
 import ru.iamserj.calculator.R;
 
-/**
- * @author iamserj
- * 17.07.2020 1:32
- */
 
 public class ImageHelper {
 	
@@ -32,9 +28,7 @@ public class ImageHelper {
 		canvas.drawRoundRect((new RectF(0.0f, 0.0f, screen.x, screen.y)), 50, 50, paint);
 		
 		metalBgResource.recycle();
-		metalBgResource = null;
 		metalBgScaled.recycle();
-		metalBgScaled = null;
 		
 		return metalBgNew;
 	}

@@ -1,9 +1,5 @@
 package ru.iamserj.calculator.helper;
 
-/**
- * @author iamserj
- * 04.02.2019 23:36
- */
 
 public class CalculationHelper {
 	
@@ -29,7 +25,7 @@ public class CalculationHelper {
 			double parse() {
 				nextChar();
 				double x = parseExpression();
-				if (pos < str.length()) throw new RuntimeException("Unexpected: " + (char)ch);
+				if (pos < str.length()) throw new RuntimeException("Unexpected: " + (char) ch);
 				return x;
 			}
 			
@@ -41,8 +37,8 @@ public class CalculationHelper {
 			
 			double parseExpression() {
 				double x = parseTerm();
-				for (;;) {
-					if      (eat('+')) x += parseTerm();                // addition
+				for (; ; ) {
+						 if (eat('+')) x += parseTerm();                // addition
 					else if (eat('-')) x -= parseTerm();                // subtraction
 					else return x;
 				}
@@ -50,8 +46,8 @@ public class CalculationHelper {
 			
 			double parseTerm() {
 				double x = parseFactor();
-				for (;;) {
-					if      (eat('*')) x *= parseFactor();              // multiplication
+				for (; ; ) {
+						 if (eat('*')) x *= parseFactor();              // multiplication
 					else if (eat('/')) x /= parseFactor();              // division
 					else return x;
 				}
@@ -70,7 +66,7 @@ public class CalculationHelper {
 					while ((ch >= '0' && ch <= '9') || ch == '.') nextChar();
 					x = Double.parseDouble(str.substring(startPos, this.pos));
 				} else {
-					throw new RuntimeException("Unexpected: " + (char)ch);
+					throw new RuntimeException("Unexpected: " + (char) ch);
 				}
 				
 				return x;

@@ -6,7 +6,6 @@
 	<dimen name="bt_numeric_text_size">32sp</dimen>
 	<dimen name="bt_operator_text_size">32sp</dimen>
 	<dimen name="bt_brackets_text_size">24sp</dimen>
-	<!--dimen name="bt_clear_text_size">16sp</dimen-->
 
 	<dimen name="display_history_text_size">16sp</dimen>
 	<dimen name="display_result_text_size">56sp</dimen>
